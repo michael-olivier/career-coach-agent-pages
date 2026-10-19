@@ -51,6 +51,7 @@ const nextTripCollapse = document.querySelector("#next-trip-collapse");
 const homePrompt = document.querySelector("#home-prompt");
 const homeSendButton = document.querySelector("#home-send-button");
 const homeMicButton = document.querySelector("#home-mic-button");
+const homeGreeting = document.querySelector("#home-greeting");
 const happeningsSlides = document.querySelectorAll(".happenings-slide");
 const happeningsPrev = document.querySelector("#happenings-prev");
 const happeningsNext = document.querySelector("#happenings-next");
@@ -109,6 +110,15 @@ const pageNavItems = document.querySelectorAll(".page-nav-item");
 
 const DEFAULT_ROUTE = "/pages/home";
 const homeTopbar = document.querySelector("#home-topbar");
+const workspacePageLabel = document.querySelector("#workspace-page-label");
+const workspacePageHeading = document.querySelector("#workspace-page-heading");
+const workspacePageSubtitle = document.querySelector("#workspace-page-subtitle");
+const workspacePageMetric = document.querySelector("#workspace-page-metric");
+const workspaceList = document.querySelector("#workspace-list");
+const workspaceDetail = document.querySelector("#workspace-detail");
+
+let currentWorkspacePage;
+let workspaceRouteSync = false;
 
 const AGENT_LABELS = {
   "career-coach": "Career Coach",
@@ -127,6 +137,654 @@ const PAGE_SECTION_IDS = {
   "learning-library": "page-learning-library",
   "workspace-settings": "page-home",
 };
+
+const WORKSPACE_PAGES = {
+  tasks: {
+    label: "Tasks",
+    title: "All tasks",
+    subtitle: "Open items pulled from Career Coach, Travel, Meeting, Feedback, and Learning.",
+    items: [
+      {
+        id: "review-promotion-packet",
+        title: "Review promotion packet",
+        subtitle: "Tasks · Principal Designer · Jordan Lee",
+        status: { label: "Overdue", className: "status-pill-overdue", icon: "emoji-sad" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Jordan Lee",
+        },
+        detail: {
+          eyebrow: "Career Coach",
+          summary:
+            "Jordan’s principal promotion packet is ready for manager review. Validate scope evidence, stakeholder quotes, and the promotion narrative before calibration.",
+          meta: [
+            { label: "Owner", value: "Michael Olivier" },
+            { label: "Due", value: "Oct 10 · Overdue by 9 days" },
+            { label: "Source", value: "Growth plans · Principal IC track" },
+          ],
+          sections: [
+            {
+              title: "What to review",
+              body: "Confirm impact examples map to principal-level expectations and that peer feedback supports the promotion case.",
+            },
+            {
+              title: "Next step",
+              body: "Leave comments for Jordan, then mark ready for HR calibration on Wednesday.",
+            },
+          ],
+          actions: [
+            { label: "Open promotion packet", primary: true },
+            { label: "Schedule calibration prep" },
+          ],
+        },
+      },
+      {
+        id: "weekly-1-1-maya",
+        title: "Weekly 1:1 with Maya",
+        subtitle: "Events · Today, 2:30 PM",
+        status: { label: "Today", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "meeting", icon: "calendar" },
+        detail: {
+          eyebrow: "Meeting Agent",
+          summary:
+            "Prepare for your 1:1 with Maya Chen. Recent check-in notes highlight facilitation wins and a need for clearer promotion narrative practice.",
+          meta: [
+            { label: "When", value: "Today · 2:30 – 3:00 PM MT" },
+            { label: "Location", value: "Zoom · Nexus calendar hold" },
+            { label: "Direct report", value: "Maya Chen · Senior Designer" },
+          ],
+          sections: [
+            {
+              title: "Suggested agenda",
+              body: "Celebrate stakeholder narrative progress, align on Q4 development goals, and preview principal-scope conversation topics.",
+            },
+          ],
+          actions: [{ label: "Open 1:1 brief", primary: true }, { label: "Add talking point" }],
+        },
+      },
+      {
+        id: "confirm-denver-interview",
+        title: "Confirm Denver leadership interview",
+        subtitle: "Travel · Nov 4 – Nov 5",
+        status: { label: "Needs confirmation", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "travel", icon: "compass" },
+        detail: {
+          eyebrow: "Travel Agent",
+          summary:
+            "United flights are on hold for the Denver leadership interview loop. Confirm travelers and book before holds expire tonight.",
+          meta: [
+            { label: "Trip", value: "Denver leadership interview" },
+            { label: "Travelers", value: "Michael Olivier + 1" },
+            { label: "Hold expires", value: "Today · 6:00 PM MT" },
+          ],
+          sections: [
+            {
+              title: "On hold",
+              body: "UA 552 SFO → DEN Nov 4 · UA 881 DEN → SFO Nov 5. Lodging not booked yet.",
+            },
+          ],
+          actions: [{ label: "Review and confirm flights", primary: true }, { label: "Message Travel Agent" }],
+        },
+      },
+      {
+        id: "share-portfolio-feedback",
+        title: "Share portfolio feedback",
+        subtitle: "Feedback · Associate Designer · Ari Reed",
+        status: { label: "Due soon", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "feedback", icon: "message-text" },
+        detail: {
+          eyebrow: "Feedback Agent",
+          summary:
+            "Draft is ready from your latest portfolio review with Ari. Tone is supportive; tighten critique expectations before Ari presents first concepts to partners.",
+          meta: [
+            { label: "Recipient", value: "Ari Reed" },
+            { label: "Review type", value: "Portfolio critique" },
+            { label: "Send by", value: "Tomorrow" },
+          ],
+          sections: [
+            {
+              title: "Draft highlight",
+              body: "“Strong visual exploration—next round, show two divergent directions with explicit tradeoffs for engineering and PM partners.”",
+            },
+          ],
+          actions: [{ label: "Edit and send feedback", primary: true }, { label: "Save as template" }],
+        },
+      },
+      {
+        id: "calibrate-q4-goals",
+        title: "Calibrate Q4 goals",
+        subtitle: "Tasks · Full team",
+        status: { label: "In progress", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: {
+          type: "avatars",
+          people: [
+            { src: "./assets/michael-avatar.png", alt: "Michael Olivier" },
+            {
+              src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80",
+              alt: "Ari Reed",
+            },
+            {
+              src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80",
+              alt: "Maya Chen",
+            },
+          ],
+        },
+        detail: {
+          eyebrow: "Career Coach",
+          summary:
+            "Align development goals across all five direct reports before Q4 check-ins. Two reports still need measurable outcomes attached.",
+          meta: [
+            { label: "Team", value: "5 direct reports" },
+            { label: "Progress", value: "3 of 5 goals finalized" },
+            { label: "Workshop", value: "Career framework calibration · Wed" },
+          ],
+          sections: [
+            {
+              title: "Outstanding",
+              body: "Lena and Noah need clearer success metrics on cross-functional influence goals.",
+            },
+          ],
+          actions: [{ label: "Open team goals board", primary: true }],
+        },
+      },
+      {
+        id: "assign-critique-workshop",
+        title: "Assign critique skills workshop",
+        subtitle: "Learning · Senior Designer",
+        status: { label: "Due soon", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "learning", icon: "graduation-cap" },
+        detail: {
+          eyebrow: "Learning Agent",
+          summary:
+            "Recommended for Maya based on recent 1:1 themes. Enrolling adds reminders and follow-up coaching prompts after each session.",
+          meta: [
+            { label: "Course", value: "Leading through ambiguous strategy" },
+            { label: "Format", value: "3 sessions · 50 minutes each" },
+            { label: "Starts", value: "Dec 2" },
+          ],
+          sections: [
+            {
+              title: "Why now",
+              body: "Supports Maya’s goal to practice framing tradeoffs before director-level reviews.",
+            },
+          ],
+          actions: [{ label: "Assign to Maya", primary: true }, { label: "Preview course" }],
+        },
+      },
+      {
+        id: "book-rental-car-sf",
+        title: "Book rental car for SF hiring panel",
+        subtitle: "Travel · Dec 9 – Dec 10",
+        status: { label: "Missing booking", className: "status-pill-overdue", icon: "warning-circle" },
+        leading: { type: "agent", agent: "travel", icon: "compass" },
+        detail: {
+          eyebrow: "Travel Agent",
+          summary:
+            "Flights and hotel are confirmed for the SF hiring panel, but ground transport is missing. Book before Dec 1 to stay within policy.",
+          meta: [
+            { label: "Trip", value: "SF hiring panel" },
+            { label: "Pickup", value: "SFO · Dec 9" },
+            { label: "Policy", value: "Mid-size or compact · Nexus preferred vendors" },
+          ],
+          sections: [
+            {
+              title: "Suggested",
+              body: "Hertz mid-size at SFO Terminal 3 — matches your prior SF interview trips.",
+            },
+          ],
+          actions: [{ label: "Book rental car", primary: true }],
+        },
+      },
+    ],
+  },
+  team: {
+    label: "Team",
+    title: "Your team",
+    subtitle: "Direct reports, weekly check-ins, and coaching context in one place.",
+    items: [
+      {
+        id: "ari-reed",
+        title: "Ari Reed",
+        subtitle: "Associate Designer · Weekly check-in submitted",
+        status: { label: "Needs coaching", className: "status-pill-pending", icon: "clock" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Ari Reed",
+        },
+        detail: {
+          eyebrow: "Check-ins",
+          summary:
+            "Ari needs clearer critique expectations before presenting first concepts. Focus on structured feedback frameworks in your next 1:1.",
+          meta: [
+            { label: "Level", value: "Associate Designer" },
+            { label: "Tenure", value: "8 months on team" },
+            { label: "Last 1:1", value: "Oct 3" },
+          ],
+          sections: [
+            {
+              title: "This week",
+              body: "Onboarding milestone: first partner critique scheduled Friday. Review portfolio feedback draft before send.",
+            },
+          ],
+          actions: [{ label: "Open growth plan", primary: true }, { label: "Schedule 1:1" }],
+        },
+      },
+      {
+        id: "maya-chen",
+        title: "Maya Chen",
+        subtitle: "Senior Designer · 1:1 today",
+        status: { label: "On track", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Maya Chen",
+        },
+        detail: {
+          eyebrow: "Check-ins",
+          summary:
+            "Strong progress on facilitation and stakeholder narratives. Discuss principal-scope readiness and Q4 learning path.",
+          meta: [
+            { label: "Level", value: "Senior Designer" },
+            { label: "Next 1:1", value: "Today · 2:30 PM" },
+            { label: "Goals", value: "2 of 3 Q4 goals finalized" },
+          ],
+          sections: [
+            {
+              title: "Recent win",
+              body: "Led cross-functional workshop that unblocked engineering estimates on the onboarding redesign.",
+            },
+          ],
+          actions: [{ label: "Open 1:1 brief", primary: true }],
+        },
+      },
+      {
+        id: "lena-ortiz",
+        title: "Lena Ortiz",
+        subtitle: "Senior Designer · Check-in due Friday",
+        status: { label: "Due soon", className: "status-pill-pending", icon: "clock" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Lena Ortiz",
+        },
+        detail: {
+          eyebrow: "Check-ins",
+          summary:
+            "Lena is calibrating influence goals for Q4. Help connect research synthesis strengths to measurable product outcomes.",
+          meta: [
+            { label: "Level", value: "Senior Designer" },
+            { label: "Check-in", value: "Due Fri · Oct 17" },
+            { label: "Focus", value: "Cross-functional influence" },
+          ],
+          sections: [
+            {
+              title: "Manager note",
+              body: "Recent feedback praised research synthesis; next step is tying recommendations to customer metrics.",
+            },
+          ],
+          actions: [{ label: "Review check-in draft", primary: true }],
+        },
+      },
+      {
+        id: "jordan-lee",
+        title: "Jordan Lee",
+        subtitle: "Principal Designer · Promotion packet in review",
+        status: { label: "Priority", className: "status-pill-overdue", icon: "emoji-sad" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Jordan Lee",
+        },
+        detail: {
+          eyebrow: "Check-ins",
+          summary:
+            "Promotion packet awaiting your review before org calibration. Jordan is ready to discuss principal IC scope and design strategy ownership.",
+          meta: [
+            { label: "Level", value: "Principal Designer" },
+            { label: "Packet status", value: "Submitted · awaiting manager review" },
+            { label: "Calibration", value: "Wed · Leadership forum" },
+          ],
+          sections: [
+            {
+              title: "Evidence themes",
+              body: "Org-level design strategy, mentorship of senior ICs, and measurable portfolio outcomes across two product lines.",
+            },
+          ],
+          actions: [{ label: "Review promotion packet", primary: true }],
+        },
+      },
+      {
+        id: "noah-patel",
+        title: "Noah Patel",
+        subtitle: "Principal Designer · Strategy discussion queued",
+        status: { label: "Ready", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Noah Patel",
+        },
+        detail: {
+          eyebrow: "Check-ins",
+          summary:
+            "Ready to discuss principal scope and org-level design strategy. Align on H1 planning participation and staff+ partnership model.",
+          meta: [
+            { label: "Level", value: "Principal Designer" },
+            { label: "Q4 focus", value: "Ambiguous strategy leadership" },
+            { label: "Goals", value: "Needs measurable outcomes on influence OKR" },
+          ],
+          sections: [
+            {
+              title: "Suggested topic",
+              body: "Define success metrics for the platform vision workstream before director review.",
+            },
+          ],
+          actions: [{ label: "Open strategy notes", primary: true }],
+        },
+      },
+    ],
+  },
+  "growth-plans": {
+    label: "Growth plans",
+    title: "Development plans",
+    subtitle: "Goals, calibrations, and events tied to team growth.",
+    items: [
+      {
+        id: "maya-q4-goals",
+        title: "Maya Chen · Q4 development goals",
+        subtitle: "Growth plan · 2 goals pending metrics",
+        status: { label: "In progress", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Maya Chen",
+        },
+        detail: {
+          eyebrow: "Growth plan",
+          summary:
+            "Finalize measurable outcomes for influence and principal-readiness goals before end-of-quarter check-in.",
+          meta: [
+            { label: "Designer", value: "Maya Chen · Senior" },
+            { label: "Review", value: "Due Oct 31" },
+            { label: "Coach", value: "Career Coach Agent" },
+          ],
+          sections: [
+            {
+              title: "Open items",
+              body: "Add success metrics for “lead ambiguous strategy reviews” and link learning workshop completion.",
+            },
+          ],
+          actions: [{ label: "Edit goals", primary: true }],
+        },
+      },
+      {
+        id: "career-framework-calibration",
+        title: "Career framework calibration",
+        subtitle: "Events · Wednesday · Leadership forum",
+        status: { label: "This week", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: { type: "agent", agent: "meeting", icon: "calendar" },
+        detail: {
+          eyebrow: "Upcoming event",
+          summary:
+            "Cross-functional calibration for design career levels. Bring promotion packets and Q4 goal summaries for your team.",
+          meta: [
+            { label: "When", value: "Wednesday · 10:00 AM MT" },
+            { label: "Attendees", value: "Design managers + HRBP" },
+            { label: "Prep due", value: "Tuesday EOD" },
+          ],
+          sections: [
+            {
+              title: "Your prep",
+              body: "Jordan promotion packet, Maya principal-readiness notes, and team Q4 goal roll-up.",
+            },
+          ],
+          actions: [{ label: "Open calibration packet", primary: true }],
+        },
+      },
+      {
+        id: "ari-onboarding-plan",
+        title: "Ari Reed · Onboarding plan",
+        subtitle: "Growth plan · Month 2 milestones",
+        status: { label: "On track", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Ari Reed",
+        },
+        detail: {
+          eyebrow: "Growth plan",
+          summary:
+            "Associate designer onboarding track through first partner critique. Emphasis on critique vocabulary and presentation structure.",
+          meta: [
+            { label: "Designer", value: "Ari Reed · Associate" },
+            { label: "Next milestone", value: "Partner critique · Friday" },
+            { label: "Owner", value: "Michael + Maya (buddy)" },
+          ],
+          sections: [
+            {
+              title: "Milestone",
+              body: "Complete shadow critiques and deliver first structured concept readout to PM partners.",
+            },
+          ],
+          actions: [{ label: "View onboarding checklist", primary: true }],
+        },
+      },
+      {
+        id: "noah-strategy-track",
+        title: "Noah Patel · Platform strategy track",
+        subtitle: "Growth plan · Principal scope",
+        status: { label: "Needs metrics", className: "status-pill-pending", icon: "clock" },
+        leading: {
+          type: "avatar",
+          src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=96&h=96&q=80",
+          alt: "Noah Patel",
+        },
+        detail: {
+          eyebrow: "Growth plan",
+          summary:
+            "Define org-level outcomes for platform vision work. Connect to H1 planning and staff design partnership.",
+          meta: [
+            { label: "Designer", value: "Noah Patel · Principal" },
+            { label: "Horizon", value: "Q4 – H1" },
+            { label: "Sponsor", value: "Director, Product Design" },
+          ],
+          sections: [
+            {
+              title: "Discussion prompt",
+              body: "What measurable customer or business metrics will move if the platform vision lands?",
+            },
+          ],
+          actions: [{ label: "Add success metrics", primary: true }],
+        },
+      },
+    ],
+  },
+  feedback: {
+    label: "Feedback",
+    title: "Feedback library",
+    subtitle: "Recent feedback, drafts, and themes across your team.",
+    items: [
+      {
+        id: "feedback-maya-prototype",
+        title: "To Maya Chen · Prototype clarity",
+        subtitle: "Sent · 1 day ago",
+        status: { label: "Delivered", className: "status-pill-progress", icon: "check-circle" },
+        leading: { type: "agent", agent: "feedback", icon: "message-text" },
+        detail: {
+          eyebrow: "Recent feedback",
+          summary:
+            "“Your prototype made tradeoffs clear and helped engineering estimate the right path forward.”",
+          meta: [
+            { label: "Recipient", value: "Maya Chen" },
+            { label: "Context", value: "Onboarding redesign review" },
+            { label: "Sent", value: "1 day ago" },
+          ],
+          sections: [
+            {
+              title: "Follow-up",
+              body: "Ask Maya to replicate this tradeoff format in the next director readout.",
+            },
+          ],
+          actions: [{ label: "Use as template", primary: true }],
+        },
+      },
+      {
+        id: "feedback-lena-research",
+        title: "To Lena Ortiz · Research synthesis",
+        subtitle: "Sent · 3 days ago",
+        status: { label: "Delivered", className: "status-pill-progress", icon: "check-circle" },
+        leading: { type: "agent", agent: "feedback", icon: "message-text" },
+        detail: {
+          eyebrow: "Recent feedback",
+          summary:
+            "“Great research synthesis. Next time, anchor recommendations to measurable customer outcomes.”",
+          meta: [
+            { label: "Recipient", value: "Lena Ortiz" },
+            { label: "Context", value: "Discovery readout" },
+            { label: "Sent", value: "3 days ago" },
+          ],
+          sections: [
+            {
+              title: "Coaching angle",
+              body: "Pair with Q4 influence goal metrics in your next 1:1.",
+            },
+          ],
+          actions: [{ label: "Schedule follow-up", primary: true }],
+        },
+      },
+      {
+        id: "feedback-ari-critique",
+        title: "Draft · Ari Reed · Portfolio critique",
+        subtitle: "Feedback Agent · Not sent",
+        status: { label: "Draft", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "feedback", icon: "message-text" },
+        detail: {
+          eyebrow: "Draft feedback",
+          summary:
+            "“Strong visual exploration—next round, show two divergent directions with explicit tradeoffs for engineering and PM partners.”",
+          meta: [
+            { label: "Recipient", value: "Ari Reed" },
+            { label: "Review", value: "Portfolio round 2" },
+            { label: "Due", value: "Tomorrow" },
+          ],
+          sections: [
+            {
+              title: "Tone check",
+              body: "Supportive with clear critique expectations—matches Ari’s onboarding goals.",
+            },
+          ],
+          actions: [{ label: "Edit and send", primary: true }, { label: "Discard draft" }],
+        },
+      },
+      {
+        id: "feedback-themes-q4",
+        title: "Team themes · Q4",
+        subtitle: "Feedback Agent · Auto-summary",
+        status: { label: "Insight", className: "status-pill-progress", icon: "emoji-blink-right" },
+        leading: { type: "agent", agent: "feedback", icon: "message-text" },
+        detail: {
+          eyebrow: "Themes",
+          summary:
+            "Recurring strengths: research synthesis and facilitation. Recurring growth area: tying design decisions to measurable outcomes.",
+          meta: [
+            { label: "Period", value: "Last 30 days" },
+            { label: "Reports", value: "5 direct reports" },
+            { label: "Sources", value: "12 feedback entries" },
+          ],
+          sections: [
+            {
+              title: "Suggested action",
+              body: "Use calibration prep to align growth plans on outcome-based goals.",
+            },
+          ],
+          actions: [{ label: "Export summary", primary: true }],
+        },
+      },
+    ],
+  },
+  "learning-library": {
+    label: "Learning library",
+    title: "Courses and paths",
+    subtitle: "Suggested learnings matched to your team’s levels and goals.",
+    items: [
+      {
+        id: "execution-to-product-thinking",
+        title: "From execution to product thinking",
+        subtitle: "Associate Designer · Oct 21 – Nov 4",
+        status: { label: "Suggested", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "learning", icon: "graduation-cap" },
+        detail: {
+          eyebrow: "Suggested learning",
+          summary:
+            "Build confidence in problem framing, research synthesis, and critique. Recommended for Ari Reed’s onboarding track.",
+          meta: [
+            { label: "Audience", value: "Associate Designer" },
+            { label: "Schedule", value: "Oct 21 – Nov 4" },
+            { label: "Format", value: "3 sessions · 45 minutes each" },
+          ],
+          sections: [
+            {
+              title: "Outcomes",
+              body: "Framing problems for partner reviews and delivering structured concept readouts.",
+            },
+          ],
+          actions: [{ label: "Enroll Ari Reed", primary: true }, { label: "Preview syllabus" }],
+        },
+      },
+      {
+        id: "influencing-without-authority",
+        title: "Influencing without authority",
+        subtitle: "Principal Designer · Nov 6 – Nov 20",
+        status: { label: "Suggested", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "learning", icon: "graduation-cap" },
+        detail: {
+          eyebrow: "Suggested learning",
+          summary:
+            "Sharpen executive storytelling and cross-functional alignment. Strong fit for Noah’s platform strategy track.",
+          meta: [
+            { label: "Audience", value: "Principal Designer" },
+            { label: "Schedule", value: "Nov 6 – Nov 20" },
+            { label: "Format", value: "2 workshops · 60 minutes each" },
+          ],
+          sections: [
+            {
+              title: "Outcomes",
+              body: "Executive-ready narratives and alignment plans for ambiguous strategy work.",
+            },
+          ],
+          actions: [{ label: "Enroll Noah Patel", primary: true }],
+        },
+      },
+      {
+        id: "leading-ambiguous-strategy",
+        title: "Leading through ambiguous strategy",
+        subtitle: "Senior Designer · Dec 2 – Dec 16",
+        status: { label: "Suggested", className: "status-pill-pending", icon: "clock" },
+        leading: { type: "agent", agent: "learning", icon: "graduation-cap" },
+        detail: {
+          eyebrow: "Suggested learning",
+          summary:
+            "Practice framing tradeoffs, aligning partners, and coaching critique. Matches Maya’s Q4 development goals.",
+          meta: [
+            { label: "Audience", value: "Senior Designer" },
+            { label: "Schedule", value: "Dec 2 – Dec 16" },
+            { label: "Format", value: "3 sessions · 50 minutes each" },
+          ],
+          sections: [
+            {
+              title: "Agent note",
+              body: "Enrolling adds reminders before each session and follow-up coaching prompts after completion.",
+            },
+          ],
+          actions: [{ label: "Enroll Maya Chen", primary: true }, { label: "Ask Learning Agent" }],
+        },
+      },
+    ],
+  },
+};
+
+const WORKSPACE_PAGE_KEYS = new Set(Object.keys(WORKSPACE_PAGES));
 
 const CHAT_PROMPTS = {
   "principal-ic-growth-path": "Continue our conversation about principal IC growth paths for my team.",
@@ -350,6 +1008,220 @@ const updateHomeTopbar = (path) => {
   }
 
   homeTopbar.hidden = path !== "/pages/home";
+};
+
+const getTimeOfDayGreeting = (date = new Date()) => {
+  const hour = date.getHours();
+
+  if (hour < 12) {
+    return "morning";
+  }
+
+  if (hour < 18) {
+    return "afternoon";
+  }
+
+  return "evening";
+};
+
+const updateHomeGreeting = () => {
+  if (!homeGreeting) {
+    return;
+  }
+
+  homeGreeting.textContent = `Good ${getTimeOfDayGreeting()}, Michael`;
+};
+
+const renderWorkspaceLeading = (leading) => {
+  if (!leading) {
+    return "";
+  }
+
+  if (leading.type === "avatar") {
+    return `<div class="task-leading"><div class="avatar-stack" aria-hidden="true"><img src="${leading.src}" alt="" /></div></div>`;
+  }
+
+  if (leading.type === "avatars") {
+    const images = leading.people
+      .map((person) => `<img src="${person.src}" alt="" />`)
+      .join("");
+    return `<div class="task-leading"><div class="avatar-stack" aria-hidden="true">${images}</div></div>`;
+  }
+
+  if (leading.type === "agent") {
+    return `<div class="task-leading"><span class="agent-icon agent-icon-${leading.agent} task-agent-icon" aria-hidden="true"><i class="iconoir-${leading.icon}" aria-hidden="true"></i></span></div>`;
+  }
+
+  return "";
+};
+
+const renderWorkspaceStatusPill = (status) => {
+  if (!status) {
+    return "";
+  }
+
+  return `<span class="status-pill ${status.className}">
+    <span class="status-pill-icon" aria-hidden="true"><i class="iconoir-${status.icon}"></i></span>
+    ${status.label}
+  </span>`;
+};
+
+const renderWorkspaceListItem = (item, selectedId) => {
+  const isActive = item.id === selectedId;
+
+  return `<button
+    type="button"
+    class="task-row workspace-list-item${isActive ? " is-active" : ""}"
+    role="option"
+    aria-selected="${isActive}"
+    data-workspace-item-id="${item.id}"
+  >
+    ${renderWorkspaceLeading(item.leading)}
+    <div class="task-copy">
+      <strong>${item.title}</strong>
+      <span class="task-subtitle">${item.subtitle}</span>
+    </div>
+  </button>`;
+};
+
+const renderWorkspaceDetail = (item) => {
+  if (!item?.detail) {
+    return `<div class="workspace-detail-empty"><p>Select an item to see details and actions.</p></div>`;
+  }
+
+  const { detail } = item;
+  const meta = (detail.meta ?? [])
+    .map(
+      (entry) => `<div><dt>${entry.label}</dt><dd>${entry.value}</dd></div>`,
+    )
+    .join("");
+  const sections = (detail.sections ?? [])
+    .map(
+      (section) =>
+        `<section class="workspace-detail-section"><h4>${section.title}</h4><p>${section.body}</p></section>`,
+    )
+    .join("");
+  const actions = (detail.actions ?? [])
+    .map((action) => {
+      const className = action.primary ? "primary-button" : "secondary-button";
+      return `<button type="button" class="${className}">${action.label}</button>`;
+    })
+    .join("");
+
+  return `<div class="workspace-detail-inner">
+    <header class="workspace-detail-header">
+      <div>
+        <p class="section-label">${detail.eyebrow ?? ""}</p>
+        <h3>${item.title}</h3>
+      </div>
+      ${renderWorkspaceStatusPill(item.status)}
+    </header>
+    <p class="workspace-detail-summary">${detail.summary ?? ""}</p>
+    <dl class="workspace-detail-meta">${meta}</dl>
+    <div class="workspace-detail-sections">${sections}</div>
+    <div class="workspace-detail-actions">${actions}</div>
+  </div>`;
+};
+
+const selectWorkspaceItem = (pageKey, itemId, { updateHash = false } = {}) => {
+  const config = WORKSPACE_PAGES[pageKey];
+  if (!config || !workspaceList || !workspaceDetail) {
+    return;
+  }
+
+  const item =
+    config.items.find((entry) => entry.id === itemId) ?? config.items[0];
+
+  if (!item) {
+    workspaceDetail.innerHTML = `<div class="workspace-detail-empty"><p>No items yet.</p></div>`;
+    return;
+  }
+
+  workspaceList
+    .querySelectorAll("[data-workspace-item-id]")
+    .forEach((row) => {
+      const isActive = row.dataset.workspaceItemId === item.id;
+      row.classList.toggle("is-active", isActive);
+      row.setAttribute("aria-selected", String(isActive));
+    });
+
+  workspaceDetail.innerHTML = renderWorkspaceDetail(item);
+
+  if (updateHash && !workspaceRouteSync) {
+    setRouteHash(`/pages/${pageKey}/${item.id}`, { replace: true });
+  }
+};
+
+const renderWorkspacePage = (pageKey, itemId) => {
+  const config = WORKSPACE_PAGES[pageKey];
+  if (!config || !workspaceList || !workspaceDetail) {
+    return;
+  }
+
+  currentWorkspacePage = pageKey;
+
+  if (workspacePageLabel) {
+    workspacePageLabel.textContent = config.label;
+  }
+
+  if (workspacePageHeading) {
+    workspacePageHeading.textContent = config.title;
+  }
+
+  if (workspacePageSubtitle) {
+    workspacePageSubtitle.textContent = config.subtitle ?? "";
+  }
+
+  if (workspacePageMetric) {
+    workspacePageMetric.textContent = `${config.items.length} items`;
+  }
+
+  workspaceList.setAttribute("aria-label", `${config.label} list`);
+
+  const selectedId =
+    config.items.find((entry) => entry.id === itemId)?.id ?? config.items[0]?.id;
+
+  workspaceList.innerHTML = config.items
+    .map((item) => renderWorkspaceListItem(item, selectedId))
+    .join("");
+
+  selectWorkspaceItem(pageKey, selectedId);
+};
+
+const initWorkspacePages = () => {
+  workspaceList?.addEventListener("click", (event) => {
+    const row = event.target.closest("[data-workspace-item-id]");
+    if (!row || !currentWorkspacePage) {
+      return;
+    }
+
+    selectWorkspaceItem(currentWorkspacePage, row.dataset.workspaceItemId, {
+      updateHash: true,
+    });
+  });
+
+  workspaceList?.addEventListener("keydown", (event) => {
+    if (!currentWorkspacePage || (event.key !== "ArrowDown" && event.key !== "ArrowUp")) {
+      return;
+    }
+
+    const rows = [...workspaceList.querySelectorAll("[data-workspace-item-id]")];
+    const activeIndex = rows.findIndex((row) => row.classList.contains("is-active"));
+    if (activeIndex === -1) {
+      return;
+    }
+
+    event.preventDefault();
+    const nextIndex =
+      event.key === "ArrowDown"
+        ? Math.min(activeIndex + 1, rows.length - 1)
+        : Math.max(activeIndex - 1, 0);
+    const nextRow = rows[nextIndex];
+    selectWorkspaceItem(currentWorkspacePage, nextRow.dataset.workspaceItemId, {
+      updateHash: true,
+    });
+    nextRow.focus();
+  });
 };
 
 const scrollToPageSection = (page, behavior = "smooth") => {
@@ -857,6 +1729,7 @@ const switchAgentView = (viewName, options = {}) => {
   }
 
   closeNavFlyouts();
+  closeUserProfileMenus();
 
   if (updateHash) {
     setRouteHash(`/agents/${resolvedView}`, { replace: replaceHash });
@@ -870,6 +1743,12 @@ const closeNavFlyouts = () => {
 
   railButtons.forEach((button) => {
     button.setAttribute("aria-expanded", "false");
+  });
+};
+
+const closeUserProfileMenus = () => {
+  document.querySelectorAll("details.user-profile[open]").forEach((profile) => {
+    profile.open = false;
   });
 };
 
@@ -901,6 +1780,7 @@ sidebarToggle?.addEventListener("click", () => {
   sidebarToggle.setAttribute("aria-label", collapsed ? "Expand navigation" : "Collapse navigation");
   sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
   closeNavFlyouts();
+  closeUserProfileMenus();
 });
 
 railButtons.forEach((button) => {
@@ -913,6 +1793,10 @@ railButtons.forEach((button) => {
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".nav-rail-item")) {
     closeNavFlyouts();
+  }
+
+  if (!event.target.closest(".user-profile")) {
+    closeUserProfileMenus();
   }
 });
 
@@ -1767,10 +2651,17 @@ const applyRoute = (path) => {
     closeTravelPeek({ updateHash: false });
     closeTravelChatSession({ updateHash: false });
     const page = slug || "home";
+    const itemId = third;
 
     if (page === "home") {
       switchAgentView("home", { updateHash: false, clearPageNav: false });
       setPageNavActive("home");
+    } else if (WORKSPACE_PAGE_KEYS.has(page)) {
+      switchAgentView("workspace-pages", { updateHash: false, clearPageNav: false });
+      setPageNavActive(page);
+      workspaceRouteSync = true;
+      renderWorkspacePage(page, itemId);
+      workspaceRouteSync = false;
     } else {
       switchAgentView("career-coach", { updateHash: false, clearPageNav: false });
       setPageNavActive(page);
@@ -1846,4 +2737,6 @@ const initRouter = () => {
 };
 
 initTravelTrips();
+updateHomeGreeting();
+initWorkspacePages();
 initRouter();

@@ -124,13 +124,13 @@
               <img src="./assets/michael-avatar.png" alt="Michael" />
               <span>
                 <strong>Michael</strong>
-                <small>Senior UX Design Manager</small>
+                <small>Principal UX Design Engineer</small>
               </span>
             </summary>
             <div class="user-details">
               <p>
                 <span>Role</span>
-                Senior UX Design Manager
+                Principal UX Design Engineer
               </p>
               <p>
                 <span>Location</span>
@@ -309,11 +309,11 @@
             </button>
             <div class="nav-flyout" id="flyout-user" role="menu" hidden>
               <p class="flyout-title">Michael</p>
-              <p class="flyout-subtitle">Senior UX Design Manager</p>
+              <p class="flyout-subtitle">Principal UX Design Engineer</p>
               <div class="user-details user-details-flyout">
                 <p>
                   <span>Role</span>
-                  Senior UX Design Manager
+                  Principal UX Design Engineer
                 </p>
                 <p>
                   <span>Location</span>
@@ -333,18 +333,21 @@
         <header class="topbar" id="home-topbar" hidden>
           <div>
             <p class="eyebrow">Monday, Oct 12</p>
-            <h3>Good afternoon, Michael</h3>
           </div>
         </header>
 
         <div id="view-home" class="agent-view">
           <section class="hero-card home-hero" id="page-home" aria-labelledby="home-heading">
             <div class="hero-copy">
-              <h2 id="home-heading">What should we do today?</h2>
+              <h2 id="home-heading">
+                <span class="hero-greeting" aria-live="polite">
+                  <span id="home-greeting">Good morning, Michael</span>
+                </span>
+              </h2>
             </div>
 
             <div class="chat-composer" role="search">
-              <label class="sr-only" for="home-prompt">What should we do today?</label>
+              <label class="sr-only" for="home-prompt">Ask anything across your People OS agents</label>
               <div class="input-row input-row-compact">
                 <input
                   id="home-prompt"
@@ -400,7 +403,7 @@
             <article class="panel home-todo-panel">
               <div class="panel-header">
                 <div>
-                  <p class="section-label">To do</p>
+                  <p class="section-label">Tasks</p>
                   <h3>Priority actions</h3>
                 </div>
                 <span class="metric">7 open</span>
@@ -536,6 +539,28 @@
                 </div>
               </div>
             </article>
+          </section>
+        </div>
+
+        <div id="view-workspace-pages" class="agent-view" hidden>
+          <section class="workspace-page" aria-labelledby="workspace-page-heading">
+            <header class="workspace-page-header panel-header">
+              <div>
+                <p class="section-label" id="workspace-page-label">Tasks</p>
+                <h2 id="workspace-page-heading">All tasks</h2>
+                <p class="workspace-page-subtitle" id="workspace-page-subtitle"></p>
+              </div>
+              <span class="metric" id="workspace-page-metric"></span>
+            </header>
+            <div class="workspace-split">
+              <div
+                class="workspace-list panel"
+                id="workspace-list"
+                role="listbox"
+                aria-label="Items"
+              ></div>
+              <article class="workspace-detail panel" id="workspace-detail" aria-live="polite"></article>
+            </div>
           </section>
         </div>
 
