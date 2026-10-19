@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Coach Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/vendor/iconoir.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" id="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+        <div class="sidebar-header">
+          <a class="brand" href="#/pages/home" aria-label="Nexus People OS home">
+            <div class="brand-mark" aria-hidden="true">
+              <img src="./assets/nexus-mark.svg" alt="" />
+            </div>
+            <div class="brand-copy">
+              <p class="eyebrow brand-wordmark">Nexus</p>
+              <h1>People OS</h1>
+            </div>
+          </a>
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            type="button"
+            aria-label="Collapse navigation"
+            aria-expanded="true"
+            aria-controls="sidebar"
+          >
+            <i class="iconoir-nav-arrow-left" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-expanded">
+          <details class="nav-section">
+            <summary class="nav-summary">Pages</summary>
+            <nav class="nav-list" aria-label="Pages">
+              <a class="nav-item page-nav-item" href="#/pages/home" data-page="home">
+                <span>Home</span>
+              </a>
+              <a class="nav-item page-nav-item" href="#/pages/tasks" data-page="tasks">Tasks</a>
+              <a class="nav-item page-nav-item" href="#/pages/team" data-page="team">Team</a>
+              <a class="nav-item page-nav-item" href="#/pages/growth-plans" data-page="growth-plans">
+                Growth Plans
+              </a>
+              <a class="nav-item page-nav-item" href="#/pages/feedback" data-page="feedback">Feedback</a>
+              <a class="nav-item page-nav-item" href="#/pages/learning-library" data-page="learning-library">
+                Learning Library
+              </a>
+            </nav>
+          </details>
+
+          <details class="nav-section" open>
+            <summary class="nav-summary">Agents</summary>
+            <nav class="nav-list" aria-label="Agents">
+              <a
+                class="nav-item agent-nav-item active"
+                href="#/agents/career-coach"
+                data-agent-view="career-coach"
+              >
+                <span class="agent-icon agent-icon-career" aria-hidden="true">
+                  <i class="iconoir-medal" aria-hidden="true"></i>
+                </span>
+                Career Coach
+              </a>
+              <a class="nav-item agent-nav-item" href="#/agents/feedback-agent" data-agent-view="feedback-agent">
+                <span class="agent-icon agent-icon-feedback" aria-hidden="true">
+                  <i class="iconoir-message-text" aria-hidden="true"></i>
+                </span>
+                Feedback
+              </a>
+              <a class="nav-item agent-nav-item" href="#/agents/learning-agent" data-agent-view="learning-agent">
+                <span class="agent-icon agent-icon-learning" aria-hidden="true">
+                  <i class="iconoir-graduation-cap" aria-hidden="true"></i>
+                </span>
+                Learning
+              </a>
+              <a class="nav-item agent-nav-item" href="#/agents/travel-agent" data-agent-view="travel-agent">
+                <span class="agent-icon agent-icon-travel" aria-hidden="true">
+                  <i class="iconoir-compass" aria-hidden="true"></i>
+                </span>
+                Travel
+              </a>
+              <a class="nav-item agent-nav-item" href="#/agents/meeting-agent" data-agent-view="meeting-agent">
+                <span class="agent-icon agent-icon-meeting" aria-hidden="true">
+                  <i class="iconoir-calendar" aria-hidden="true"></i>
+                </span>
+                Meeting
+              </a>
+            </nav>
+          </details>
+
+          <details class="nav-section recent-chats">
+            <summary class="nav-summary">Chats</summary>
+            <div class="nav-list" aria-label="Recent chats">
+              <a class="chat-link" href="#/chats/principal-ic-growth-path" data-chat="principal-ic-growth-path">
+                <strong>Principal IC growth path</strong>
+                <span>12 min ago</span>
+              </a>
+              <a class="chat-link" href="#/chats/q4-development-goals" data-chat="q4-development-goals">
+                <strong>Q4 development goals</strong>
+                <span>Yesterday</span>
+              </a>
+              <a
+                class="chat-link"
+                href="#/chats/associate-designer-onboarding"
+                data-chat="associate-designer-onboarding"
+              >
+                <strong>Associate designer onboarding</strong>
+                <span>Fri</span>
+              </a>
+            </div>
+          </details>
+
+          <details class="user-profile">
+            <summary aria-label="Show Michael's profile">
+              <img src="./assets/michael-avatar.png" alt="Michael" />
+              <span>
+                <strong>Michael</strong>
+                <small>Senior UX Design Manager</small>
+              </span>
+            </summary>
+            <div class="user-details">
+              <p>
+                <span>Role</span>
+                Senior UX Design Manager
+              </p>
+              <p>
+                <span>Location</span>
+                Colorado Home Office
+              </p>
+              <p>
+                <span>Team</span>
+                5 direct reports across Associate to Principal Designer
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <nav class="sidebar-rail" aria-label="Collapsed navigation">
+          <div class="nav-rail-item">
+            <a class="rail-button" href="#/pages/home" aria-label="Nexus People OS home">
+              <span class="brand-mark rail-brand-mark">
+                <img src="./assets/nexus-mark.svg" alt="" />
+              </span>
+            </a>
+          </div>
+
+          <div class="nav-rail-item">
+            <button
+              class="rail-button"
+              type="button"
+              data-flyout="flyout-pages"
+              aria-label="Pages"
+              aria-expanded="false"
+            >
+              <i class="iconoir-layout-left" aria-hidden="true"></i>
+            </button>
+            <div class="nav-flyout" id="flyout-pages" role="menu" hidden>
+              <p class="flyout-title">Pages</p>
+              <a class="nav-item page-nav-item" href="#/pages/home" data-page="home" role="menuitem">Home</a>
+              <a class="nav-item page-nav-item" href="#/pages/tasks" data-page="tasks" role="menuitem">Tasks</a>
+              <a class="nav-item page-nav-item" href="#/pages/team" data-page="team" role="menuitem">Team</a>
+              <a class="nav-item page-nav-item" href="#/pages/growth-plans" data-page="growth-plans" role="menuitem">
+                Growth Plans
+              </a>
+              <a class="nav-item page-nav-item" href="#/pages/feedback" data-page="feedback" role="menuitem">
+                Feedback
+              </a>
+              <a
+                class="nav-item page-nav-item"
+                href="#/pages/learning-library"
+                data-page="learning-library"
+                role="menuitem"
+              >
+                Learning Library
+              </a>
+            </div>
+          </div>
+
+          <div class="nav-rail-item">
+            <button
+              class="rail-button"
+              type="button"
+              data-flyout="flyout-agents"
+              aria-label="Agents"
+              aria-expanded="false"
+            >
+              <i class="iconoir-sparks" aria-hidden="true"></i>
+            </button>
+            <div class="nav-flyout" id="flyout-agents" role="menu" hidden>
+              <p class="flyout-title">Agents</p>
+              <a
+                class="nav-item agent-nav-item active"
+                href="#/agents/career-coach"
+                role="menuitem"
+                data-agent-view="career-coach"
+              >
+                <span class="agent-icon agent-icon-career" aria-hidden="true">
+                  <i class="iconoir-medal" aria-hidden="true"></i>
+                </span>
+                Career Coach
+              </a>
+              <a
+                class="nav-item agent-nav-item"
+                href="#/agents/feedback-agent"
+                role="menuitem"
+                data-agent-view="feedback-agent"
+              >
+                <span class="agent-icon agent-icon-feedback" aria-hidden="true">
+                  <i class="iconoir-message-text" aria-hidden="true"></i>
+                </span>
+                Feedback
+              </a>
+              <a
+                class="nav-item agent-nav-item"
+                href="#/agents/learning-agent"
+                role="menuitem"
+                data-agent-view="learning-agent"
+              >
+                <span class="agent-icon agent-icon-learning" aria-hidden="true">
+                  <i class="iconoir-graduation-cap" aria-hidden="true"></i>
+                </span>
+                Learning
+              </a>
+              <a
+                class="nav-item agent-nav-item"
+                href="#/agents/travel-agent"
+                role="menuitem"
+                data-agent-view="travel-agent"
+              >
+                <span class="agent-icon agent-icon-travel" aria-hidden="true">
+                  <i class="iconoir-compass" aria-hidden="true"></i>
+                </span>
+                Travel
+              </a>
+              <a
+                class="nav-item agent-nav-item"
+                href="#/agents/meeting-agent"
+                role="menuitem"
+                data-agent-view="meeting-agent"
+              >
+                <span class="agent-icon agent-icon-meeting" aria-hidden="true">
+                  <i class="iconoir-calendar" aria-hidden="true"></i>
+                </span>
+                Meeting
+              </a>
+            </div>
+          </div>
+
+          <div class="nav-rail-item">
+            <button
+              class="rail-button"
+              type="button"
+              data-flyout="flyout-chats"
+              aria-label="Chats"
+              aria-expanded="false"
+            >
+              <i class="iconoir-chat-bubble" aria-hidden="true"></i>
+            </button>
+            <div class="nav-flyout" id="flyout-chats" role="menu" hidden>
+              <p class="flyout-title">Chats</p>
+              <a
+                class="chat-link"
+                href="#/chats/principal-ic-growth-path"
+                data-chat="principal-ic-growth-path"
+                role="menuitem"
+              >
+                <strong>Principal IC growth path</strong>
+                <span>12 min ago</span>
+              </a>
+              <a
+                class="chat-link"
+                href="#/chats/q4-development-goals"
+                data-chat="q4-development-goals"
+                role="menuitem"
+              >
+                <strong>Q4 development goals</strong>
+                <span>Yesterday</span>
+              </a>
+              <a
+                class="chat-link"
+                href="#/chats/associate-designer-onboarding"
+                data-chat="associate-designer-onboarding"
+                role="menuitem"
+              >
+                <strong>Associate designer onboarding</strong>
+                <span>Fri</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="nav-rail-item nav-rail-user">
+            <button
+              class="rail-button rail-button-user"
+              type="button"
+              data-flyout="flyout-user"
+              aria-label="Michael profile"
+              aria-expanded="false"
+            >
+              <img src="./assets/michael-avatar.png" alt="" />
+            </button>
+            <div class="nav-flyout" id="flyout-user" role="menu" hidden>
+              <p class="flyout-title">Michael</p>
+              <p class="flyout-subtitle">Senior UX Design Manager</p>
+              <div class="user-details user-details-flyout">
+                <p>
+                  <span>Role</span>
+                  Senior UX Design Manager
+                </p>
+                <p>
+                  <span>Location</span>
+                  Colorado Home Office
+                </p>
+                <p>
+                  <span>Team</span>
+                  5 direct reports across Associate to Principal Designer
+                </p>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar" id="home-topbar" hidden>
+          <div>
+            <p class="eyebrow">Monday, Oct 12</p>
+            <h3>Good afternoon, Michael</h3>
+          </div>
+        </header>
+
+        <div id="view-home" class="agent-view">
+          <section class="hero-card home-hero" id="page-home" aria-labelledby="home-heading">
+            <div class="hero-copy">
+              <h2 id="home-heading">What should we do today?</h2>
+            </div>
+
+            <div class="chat-composer" role="search">
+              <label class="sr-only" for="home-prompt">What should we do today?</label>
+              <div class="input-row input-row-compact">
+                <input
+                  id="home-prompt"
+                  type="text"
+                  placeholder="Ask anything across your People OS agents…"
+                />
+                <button
+                  class="icon-button secondary-icon"
+                  id="home-mic-button"
+                  type="button"
+                  aria-label="Speak request"
+                >
+                  <i class="iconoir-microphone" aria-hidden="true"></i>
+                </button>
+                <button
+                  class="icon-button send-icon"
+                  id="home-send-button"
+                  type="button"
+                  aria-label="Send message"
+                  disabled
+                >
+                  <i class="iconoir-arrow-up" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="prompt-grid" aria-label="Suggested prompts">
+              <button type="button" data-home-prompt="Summarize this week's check-ins for my team.">
+                Summarize weekly check-ins
+              </button>
+              <button
+                type="button"
+                data-home-prompt="Help me confirm Denver interview travel for Nov 4–5 before bookings finalize."
+              >
+                Confirm Denver interview trip
+              </button>
+              <button type="button" data-home-prompt="Draft thoughtful feedback for Ari's latest portfolio review.">
+                Draft portfolio feedback
+              </button>
+              <button type="button" data-home-prompt="What required HR trainings am I overdue on?">
+                Check required HR training
+              </button>
+              <button type="button" data-home-prompt="Prep talking points for my 1:1 with Maya this afternoon.">
+                Prep for Maya's 1:1
+              </button>
+              <button type="button" data-home-prompt="Recommend learning paths by designer level for my team.">
+                Plan team learning paths
+              </button>
+            </div>
+          </section>
+
+          <section class="home-dashboard-grid" aria-label="Home dashboard">
+            <article class="panel home-todo-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-label">To do</p>
+                  <h3>Priority actions</h3>
+                </div>
+                <span class="metric">7 open</span>
+              </div>
+              <div class="task-list">
+                <div class="task-row">
+                  <div class="task-leading">
+                    <div class="avatar-stack" aria-label="Jordan Lee">
+                      <img
+                        src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=96&h=96&q=80"
+                        alt="Jordan Lee"
+                      />
+                    </div>
+                  </div>
+                  <div class="task-copy">
+                    <strong>Review promotion packet</strong>
+                    <span class="task-subtitle">Tasks · Principal Designer</span>
+                  </div>
+                  <span class="status-pill status-pill-overdue">
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-emoji-sad"></i>
+                    </span>
+                    Overdue
+                  </span>
+                </div>
+                <div class="task-row">
+                  <div class="task-leading">
+                    <span class="agent-icon agent-icon-meeting task-agent-icon" aria-hidden="true">
+                      <i class="iconoir-calendar" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <div class="task-copy">
+                    <strong>Weekly 1:1 with Maya</strong>
+                    <span class="task-subtitle">Events · Today, 2:30 PM</span>
+                  </div>
+                  <span class="status-pill status-pill-pending">
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-clock"></i>
+                    </span>
+                    Today
+                  </span>
+                </div>
+                <div class="task-row">
+                  <div class="task-leading">
+                    <span class="agent-icon agent-icon-travel task-agent-icon" aria-hidden="true">
+                      <i class="iconoir-compass" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <div class="task-copy">
+                    <strong>Confirm Denver leadership interview</strong>
+                    <span class="task-subtitle">Travel · Nov 4 – Nov 5</span>
+                  </div>
+                  <span class="status-pill status-pill-pending">
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-clock"></i>
+                    </span>
+                    Needs confirmation
+                  </span>
+                </div>
+                <div class="task-row">
+                  <div class="task-leading">
+                    <span class="agent-icon agent-icon-meeting task-agent-icon" aria-hidden="true">
+                      <i class="iconoir-calendar" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <div class="task-copy">
+                    <strong>Career framework calibration</strong>
+                    <span class="task-subtitle">Events · Wednesday</span>
+                  </div>
+                  <span class="status-pill status-pill-progress">
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-emoji-blink-right"></i>
+                    </span>
+                    This week
+                  </span>
+                </div>
+                <div class="task-row">
+                  <div class="task-leading">
+                    <span class="agent-icon agent-icon-travel task-agent-icon" aria-hidden="true">
+                      <i class="iconoir-compass" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <div class="task-copy">
+                    <strong>Book rental car for SF hiring panel</strong>
+                    <span class="task-subtitle">Travel · Dec 9 – Dec 10</span>
+                  </div>
+                  <span class="status-pill status-pill-overdue">
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-warning-circle"></i>
+                    </span>
+                    Missing booking
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel home-happenings-panel" aria-label="Company happenings carousel">
+              <div class="learning-controls" aria-label="Happenings carousel controls">
+                <button class="carousel-control" id="happenings-prev" type="button" aria-label="Previous happening">
+                  <i class="iconoir-nav-arrow-left" aria-hidden="true"></i>
+                </button>
+                <button class="carousel-control" id="happenings-next" type="button" aria-label="Next happening">
+                  <i class="iconoir-nav-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="learning-carousel happenings-carousel" aria-live="polite">
+                <div class="learning-slide happenings-slide active gradient-happening-one" aria-hidden="false">
+                  <p class="section-label learning-label">Company wide</p>
+                  <div class="learning-content">
+                    <span>Required by Nov 15</span>
+                    <strong>Workplace conduct &amp; anti-harassment training</strong>
+                    <p>Annual compliance module for all people managers — about 35 minutes.</p>
+                    <button class="enroll-button happenings-cta" type="button">Start training</button>
+                  </div>
+                </div>
+                <div class="learning-slide happenings-slide gradient-happening-two" aria-hidden="true">
+                  <p class="section-label learning-label">Company wide</p>
+                  <div class="learning-content">
+                    <span>Open enrollment · Ends Oct 31</span>
+                    <strong>Review 2026 benefits elections</strong>
+                    <p>Confirm medical, HSA, and parental leave selections for your household.</p>
+                    <button class="enroll-button happenings-cta" type="button">Review benefits</button>
+                  </div>
+                </div>
+                <div class="learning-slide happenings-slide gradient-happening-three" aria-hidden="true">
+                  <p class="section-label learning-label">Company wide</p>
+                  <div class="learning-content">
+                    <span>Oct 24 · All hands</span>
+                    <strong>Q4 company priorities &amp; people programs</strong>
+                    <p>Join the livestream or watch the recording for roadmap and HR program updates.</p>
+                    <button class="enroll-button happenings-cta" type="button">Add to calendar</button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+        </div>
+
+        <div id="view-career-coach" class="agent-view" hidden>
+        <section class="hero-card" aria-labelledby="coach-heading">
+          <div class="hero-copy">
+            <div class="agent-page-title">
+              <span class="agent-icon agent-icon-career agent-icon-lg" aria-hidden="true">
+                <i class="iconoir-medal" aria-hidden="true"></i>
+              </span>
+              <p class="eyebrow">Career Coach Agent</p>
+            </div>
+            <h2 id="coach-heading">Better Coaching,<br />Better Teams</h2>
+          </div>
+
+          <div class="chat-composer" role="search">
+            <label class="sr-only" for="coach-prompt">What would you like to work on?</label>
+            <div class="input-row">
+              <div class="plus-menu">
+                <button
+                  class="icon-button secondary-icon"
+                  id="plus-button"
+                  type="button"
+                  aria-label="Add context"
+                  aria-expanded="false"
+                  aria-controls="coach-menu"
+                >
+                  <i class="iconoir-plus" aria-hidden="true"></i>
+                </button>
+                <div class="coach-menu" id="coach-menu" role="menu" aria-label="Career coach actions">
+                  <button type="button" role="menuitem" data-file-action>
+                    <span>Attach review packet</span>
+                    <small>Upload goals, calibration notes, or packets</small>
+                  </button>
+                  <button type="button" role="menuitem" data-prompt="Summarize weekly check-ins for my team.">
+                    <span>Add check-in context</span>
+                    <small>Use weekly reports from direct reports</small>
+                  </button>
+                  <button type="button" role="menuitem" data-prompt="Draft feedback for a direct report.">
+                    <span>Draft feedback</span>
+                    <small>Create clear, growth-oriented feedback</small>
+                  </button>
+                  <button type="button" role="menuitem" data-prompt="Recommend learning paths by designer level.">
+                    <span>Plan learning path</span>
+                    <small>Match development resources to role level</small>
+                  </button>
+                </div>
+                <input id="file-picker" type="file" multiple hidden />
+              </div>
+              <input
+                id="coach-prompt"
+                type="text"
+                placeholder="What would you like to work on?"
+              />
+              <button
+                class="icon-button secondary-icon"
+                id="mic-button"
+                type="button"
+                aria-label="Speak command"
+              >
+                <i class="iconoir-microphone" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button send-icon" id="send-button" type="button" aria-label="Send message" disabled>
+                <i class="iconoir-arrow-up" aria-hidden="true"></i>
+              </button>
+            </div>
+            <p class="attachment-status" id="attachment-status" aria-live="polite"></p>
+          </div>
+
+          <div class="prompt-grid" aria-label="Suggested prompts">
+            <button>Summarize this week's check-ins</button>
+            <button>Draft growth goals for my Senior Designer</button>
+            <button>Find feedback themes across my team</button>
+            <button>Prepare for upcoming 1:1s</button>
+            <button>Recommend learning paths by level</button>
+          </div>
+        </section>
+
+        <section class="dashboard-grid" aria-label="Career coach dashboard">
+          <article class="panel tasks-panel" id="page-tasks">
+            <div class="panel-header">
+              <div>
+                <p class="section-label">Tasks</p>
+                <h3>Priority actions</h3>
+              </div>
+              <span class="metric">6 open</span>
+            </div>
+            <div class="task-list">
+              <div class="task-row">
+                <div class="task-leading">
+                  <div class="avatar-stack" aria-label="Jordan Lee">
+                    <img
+                      src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=96&h=96&q=80"
+                      alt="Jordan Lee"
+                    />
+                  </div>
+                </div>
+                <div class="task-copy">
+                  <strong>Review promotion packet</strong>
+                  <span class="task-subtitle">Principal Designer</span>
+                </div>
+                <span class="status-pill status-pill-overdue">
+                  <span class="status-pill-icon" aria-hidden="true">
+                    <i class="iconoir-emoji-sad"></i>
+                  </span>
+                  Overdue
+                </span>
+              </div>
+              <div class="task-row">
+                <div class="task-leading">
+                  <span class="agent-icon agent-icon-feedback task-agent-icon" aria-hidden="true">
+                    <i class="iconoir-message-text" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="task-copy">
+                  <strong>Share portfolio feedback</strong>
+                  <span class="task-subtitle">Associate Designer</span>
+                </div>
+                <span class="status-pill status-pill-pending">
+                  <span class="status-pill-icon" aria-hidden="true">
+                    <i class="iconoir-clock"></i>
+                  </span>
+                  Due soon
+                </span>
+              </div>
+              <div class="task-row">
+                <div class="task-leading">
+                  <div
+                    class="avatar-stack"
+                    aria-label="Michael, Ari, Lena, Maya, and Noah"
+                  >
+                    <img src="./assets/michael-avatar.png" alt="Michael Olivier" />
+                    <img
+                      src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80"
+                      alt="Ari Reed"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=96&h=96&q=80"
+                      alt="Lena Ortiz"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80"
+                      alt="Maya Chen"
+                    />
+                    <img
+                      src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=96&h=96&q=80"
+                      alt="Noah Patel"
+                    />
+                  </div>
+                </div>
+                <div class="task-copy">
+                  <strong>Calibrate Q4 goals</strong>
+                  <span class="task-subtitle">Full team</span>
+                </div>
+                <span class="status-pill status-pill-progress">
+                  <span class="status-pill-icon" aria-hidden="true">
+                    <i class="iconoir-emoji-blink-right"></i>
+                  </span>
+                  In progress
+                </span>
+              </div>
+              <div class="task-row">
+                <div class="task-leading">
+                  <span class="agent-icon agent-icon-learning task-agent-icon" aria-hidden="true">
+                    <i class="iconoir-graduation-cap" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="task-copy">
+                  <strong>Assign critique skills workshop</strong>
+                  <span class="task-subtitle">Senior Designer</span>
+                </div>
+                <span class="status-pill status-pill-pending">
+                  <span class="status-pill-icon" aria-hidden="true">
+                    <i class="iconoir-clock"></i>
+                  </span>
+                  Due soon
+                </span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel learning-panel" id="page-learning-library" aria-label="Suggested Learnings carousel">
+            <div class="learning-controls" aria-label="Learning carousel controls">
+              <button class="carousel-control" id="learning-prev" type="button" aria-label="Previous learning">
+                <i class="iconoir-nav-arrow-left" aria-hidden="true"></i>
+              </button>
+              <button class="carousel-control" id="learning-next" type="button" aria-label="Next learning">
+                <i class="iconoir-nav-arrow-right" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="learning-carousel" aria-live="polite">
+              <div
+                class="learning-slide active gradient-one"
+                data-learning-id="execution-to-product-thinking"
+                data-title="From execution to product thinking"
+                data-audience="Associate Designer"
+                data-dates="Oct 21 - Nov 4"
+                data-duration="3 sessions, 45 minutes each"
+                aria-hidden="false"
+              >
+                <p class="section-label learning-label">Suggested Learnings</p>
+                <div class="learning-content">
+                  <span class="status-pill status-pill-enrolled learning-enroll-status" hidden>
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-check-circle"></i>
+                    </span>
+                    Enrolled
+                  </span>
+                  <span>For Associate Designer</span>
+                  <strong>From execution to product thinking</strong>
+                  <p>Build confidence in problem framing, research synthesis, and critique.</p>
+                  <button class="enroll-button" type="button">Enroll</button>
+                </div>
+              </div>
+              <div
+                class="learning-slide gradient-two"
+                data-learning-id="influencing-without-authority"
+                data-title="Influencing without authority"
+                data-audience="Principal Designer"
+                data-dates="Nov 6 - Nov 20"
+                data-duration="2 workshops, 60 minutes each"
+                aria-hidden="true"
+              >
+                <p class="section-label learning-label">Suggested Learnings</p>
+                <div class="learning-content">
+                  <span class="status-pill status-pill-enrolled learning-enroll-status" hidden>
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-check-circle"></i>
+                    </span>
+                    Enrolled
+                  </span>
+                  <span>For Principal Designer</span>
+                  <strong>Influencing without authority</strong>
+                  <p>Sharpen executive storytelling and cross-functional alignment.</p>
+                  <button class="enroll-button" type="button">Enroll</button>
+                </div>
+              </div>
+              <div
+                class="learning-slide gradient-three"
+                data-learning-id="leading-ambiguous-strategy"
+                data-title="Leading through ambiguous strategy"
+                data-audience="Senior Designer"
+                data-dates="Dec 2 - Dec 16"
+                data-duration="3 sessions, 50 minutes each"
+                aria-hidden="true"
+              >
+                <p class="section-label learning-label">Suggested Learnings</p>
+                <div class="learning-content">
+                  <span class="status-pill status-pill-enrolled learning-enroll-status" hidden>
+                    <span class="status-pill-icon" aria-hidden="true">
+                      <i class="iconoir-check-circle"></i>
+                    </span>
+                    Enrolled
+                  </span>
+                  <span>For Senior Designer</span>
+                  <strong>Leading through ambiguous strategy</strong>
+                  <p>Practice framing tradeoffs, aligning partners, and coaching critique.</p>
+                  <button class="enroll-button" type="button">Enroll</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel events-panel" id="page-growth-plans">
+            <div class="panel-header">
+              <div>
+                <p class="section-label">Upcoming Events</p>
+                <h3>Design leadership calendar</h3>
+              </div>
+              <span class="metric">4 days</span>
+            </div>
+            <div class="event-list">
+              <div class="event-row">
+                <div class="avatar-stack" aria-label="Maya Chen">
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Maya Chen"
+                  />
+                </div>
+                <span>Weekly 1:1 with Maya, Senior Product Designer</span>
+                <time>2:30 PM</time>
+              </div>
+              <div class="event-row">
+                <div
+                  class="avatar-stack"
+                  aria-label="Michael, Ari, Lena, Maya, Noah, Jordan, Sam, Riley, and Casey"
+                >
+                  <img
+                    src="./assets/michael-avatar.png"
+                    alt="Michael Olivier"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Ari Reed"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Lena Ortiz"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Maya Chen"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Noah Patel"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Jordan Lee"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Sam Ortiz"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Riley Chen"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Casey Morgan"
+                  />
+                </div>
+                <span>Career framework calibration</span>
+                <time>Wed</time>
+              </div>
+              <div class="event-row">
+                <div class="avatar-stack" aria-label="Ari, Lena, Maya">
+                  <img
+                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Ari Reed"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Lena Ortiz"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80"
+                    alt="Maya Chen"
+                  />
+                </div>
+                <span>Design critique: onboarding redesign</span>
+                <time>Fri</time>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel travel-panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-label">Travel Agent</p>
+                <h3>Manager travel support</h3>
+              </div>
+              <span class="metric">2 trips</span>
+            </div>
+            <div class="event-list travel-list">
+              <div class="travel-item">
+                <div class="travel-copy">
+                  <time>Austin</time>
+                  <span>Plan design offsite travel for the Q4 team workshop.</span>
+                </div>
+                <button class="travel-cta" type="button">Plan</button>
+              </div>
+              <div class="travel-item">
+                <div class="travel-copy">
+                  <time>Denver</time>
+                  <span>Book onsite interview loop for Principal Designer candidate.</span>
+                </div>
+                <button class="travel-cta" type="button">Book</button>
+              </div>
+              <div class="event">
+                <time>Agent tip</time>
+                <span>Combine travel plans with check-in schedules to avoid 1:1 conflicts.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel checkins-panel" id="page-team">
+            <div class="panel-header">
+              <div>
+                <p class="section-label">Check-Ins</p>
+                <h3>Weekly reports</h3>
+              </div>
+              <span class="metric">5 reports</span>
+            </div>
+            <div class="report-list">
+              <div class="report">
+                <img
+                  class="report-avatar"
+                  src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=96&h=96&q=80"
+                  alt="Ari Reed"
+                />
+                <div>
+                  <strong>Ari Reed</strong>
+                  <p>Needs clearer critique expectations before presenting first concepts.</p>
+                </div>
+                <span>Associate</span>
+              </div>
+              <div class="report">
+                <img
+                  class="report-avatar"
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&h=96&q=80"
+                  alt="Maya Chen"
+                />
+                <div>
+                  <strong>Maya Chen</strong>
+                  <p>Making strong progress on facilitation and stakeholder narratives.</p>
+                </div>
+                <span>Senior</span>
+              </div>
+              <div class="report">
+                <img
+                  class="report-avatar"
+                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=96&h=96&q=80"
+                  alt="Noah Patel"
+                />
+                <div>
+                  <strong>Noah Patel</strong>
+                  <p>Ready to discuss principal scope and org-level design strategy.</p>
+                </div>
+                <span>Principal</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel feedback-panel" id="page-feedback" aria-label="Recent Feedback carousel">
+            <div class="feedback-controls" aria-label="Feedback carousel controls">
+              <button class="carousel-control" id="feedback-prev" type="button" aria-label="Previous feedback">
+                <i class="iconoir-nav-arrow-left" aria-hidden="true"></i>
+              </button>
+              <button class="carousel-control" id="feedback-next" type="button" aria-label="Next feedback">
+                <i class="iconoir-nav-arrow-right" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="feedback-carousel" aria-live="polite">
+              <div class="feedback-slide feedback-gradient-one active" aria-hidden="false">
+                <p class="section-label feedback-label">Recent Feedback</p>
+                <div class="feedback-slide-content">
+                  <p class="feedback-quote">
+                    “Your prototype made tradeoffs clear and helped engineering estimate the right
+                    path forward.”
+                  </p>
+                  <span class="feedback-meta">To Maya Chen · 1 day ago</span>
+                </div>
+              </div>
+              <div class="feedback-slide feedback-gradient-two" aria-hidden="true">
+                <p class="section-label feedback-label">Recent Feedback</p>
+                <div class="feedback-slide-content">
+                  <p class="feedback-quote">
+                    “Great research synthesis. Next time, anchor recommendations to measurable
+                    customer outcomes.”
+                  </p>
+                  <span class="feedback-meta">To Lena Ortiz · 3 days ago</span>
+                </div>
+              </div>
+              <div class="feedback-slide feedback-gradient-three" aria-hidden="true">
+                <p class="section-label feedback-label">Recent Feedback</p>
+                <div class="feedback-slide-content">
+                  <p class="feedback-quote">
+                    “Strong facilitation in critique. Push one level deeper on how metrics will
+                    change after launch.”
+                  </p>
+                  <span class="feedback-meta">To Ari Reed · 5 days ago</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+        </div>
+
+        <div id="view-travel-agent" class="agent-view" hidden>
+          <div id="travel-landing">
+          <section class="hero-card" id="travel-agent-chat" aria-labelledby="travel-heading">
+            <div class="hero-copy">
+              <div class="agent-page-title">
+                <span class="agent-icon agent-icon-travel agent-icon-lg" aria-hidden="true">
+                  <i class="iconoir-compass" aria-hidden="true"></i>
+                </span>
+                <p class="eyebrow">Travel Agent</p>
+              </div>
+              <h2 id="travel-heading">Booking travel,<br />made easy</h2>
+            </div>
+
+            <div class="chat-composer" role="search">
+              <label class="sr-only" for="travel-prompt">What would you like to plan?</label>
+              <div class="input-row">
+                <button
+                  class="icon-button secondary-icon"
+                  id="travel-plus-button"
+                  type="button"
+                  aria-label="Add travel context"
+                >
+                  <i class="iconoir-plus" aria-hidden="true"></i>
+                </button>
+                <input
+                  id="travel-prompt"
+                  type="text"
+                  placeholder="Flights, hotels, rental cars, or full itineraries…"
+                />
+                <button
+                  class="icon-button secondary-icon"
+                  id="travel-mic-button"
+                  type="button"
+                  aria-label="Speak travel request"
+                >
+                  <i class="iconoir-microphone" aria-hidden="true"></i>
+                </button>
+                <button
+                  class="icon-button send-icon"
+                  id="travel-send-button"
+                  type="button"
+                  aria-label="Send travel request"
+                  disabled
+                >
+                  <i class="iconoir-arrow-up" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="prompt-grid" aria-label="Suggested travel prompts">
+              <button type="button" data-travel-prompt="Update my Austin offsite itinerary for the design workshop.">
+                Update Austin offsite
+              </button>
+              <button type="button" data-travel-prompt="Book a rental car for my Denver interview trip.">
+                Add Denver rental car
+              </button>
+              <button type="button" data-travel-prompt="Check this trip against my 1:1 calendar for conflicts.">
+                Avoid 1:1 conflicts
+              </button>
+            </div>
+          </section>
+
+          <section class="travel-page-grid" aria-label="Upcoming travel">
+            <article class="panel next-trip-panel" id="next-trip-panel">
+              <div class="trip-hero trip-hero-austin">
+                <button
+                  class="next-trip-collapse"
+                  id="next-trip-collapse"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="next-trip-details"
+                  aria-label="Collapse trip details"
+                >
+                  <i class="iconoir-collapse" aria-hidden="true"></i>
+                </button>
+                <div class="trip-hero-overlay">
+                  <p class="section-label trip-hero-label">Next trip</p>
+                  <h3>Austin design offsite</h3>
+                  <p class="trip-hero-meta">Oct 28 – Oct 31 · Austin, TX · 4 travelers</p>
+                  <p class="trip-hero-summary">Q4 team workshop · Round-trip flights confirmed</p>
+                </div>
+              </div>
+              <div class="trip-details" id="next-trip-details">
+                <div class="trip-detail-row">
+                  <span class="trip-detail-icon" aria-hidden="true">
+                    <i class="iconoir-airplane"></i>
+                  </span>
+                  <div>
+                    <strong>Flights</strong>
+                    <p>United UA 1842 · Denver → Austin · Oct 28, 9:15 AM</p>
+                    <p>United UA 1197 · Austin → Denver · Oct 31, 5:40 PM</p>
+                  </div>
+                </div>
+                <div class="trip-detail-row">
+                  <span class="trip-detail-icon" aria-hidden="true">
+                    <i class="iconoir-bed"></i>
+                  </span>
+                  <div>
+                    <strong>Lodging</strong>
+                    <p>Hyatt Regency Austin · 3 nights · 2 queen rooms + 1 king suite</p>
+                  </div>
+                </div>
+                <div class="trip-detail-row">
+                  <span class="trip-detail-icon" aria-hidden="true">
+                    <i class="iconoir-car"></i>
+                  </span>
+                  <div>
+                    <strong>Rental car</strong>
+                    <p>Hertz · Mid-size SUV · Pickup AUS · Oct 28 – Oct 31</p>
+                  </div>
+                </div>
+                <div class="trip-detail-row">
+                  <span class="trip-detail-icon" aria-hidden="true">
+                    <i class="iconoir-pin"></i>
+                  </span>
+                  <div>
+                    <strong>Workshop venue</strong>
+                    <p>Canopy by Hilton · 3rd floor studio · Check-in 8:30 AM daily</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel trips-table-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-label">Other trips</p>
+                  <h3>Booked &amp; needs attention</h3>
+                </div>
+                <span class="metric">5 trips</span>
+              </div>
+              <div class="trips-table-wrap">
+                <table class="trips-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Trip</th>
+                      <th scope="col">Dates</th>
+                      <th scope="col">Destination</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      class="trip-table-row"
+                      tabindex="0"
+                      role="button"
+                      data-trip-id="denver-leadership-interview"
+                      aria-label="Denver leadership interview — needs confirmation"
+                    >
+                      <td class="trip-table-name">
+                        <strong>Denver leadership interview</strong>
+                        <span class="trip-table-subtitle">Final loop · 2 travelers</span>
+                      </td>
+                      <td class="trip-table-date">Nov 4 – Nov 5</td>
+                      <td class="trip-table-destination">Denver, CO</td>
+                      <td>
+                        <span class="status-pill status-pill-pending">
+                          <span class="status-pill-icon" aria-hidden="true">
+                            <i class="iconoir-clock"></i>
+                          </span>
+                          Needs confirmation
+                        </span>
+                      </td>
+                    </tr>
+                    <tr
+                      class="trip-table-row"
+                      tabindex="0"
+                      role="button"
+                      data-trip-id="nyc-client-discovery"
+                      aria-label="NYC client discovery — fully booked"
+                    >
+                      <td class="trip-table-name">
+                        <strong>NYC client discovery</strong>
+                        <span class="trip-table-subtitle">Enterprise workshop · 3 travelers</span>
+                      </td>
+                      <td class="trip-table-date">Nov 12 – Nov 14</td>
+                      <td class="trip-table-destination">New York, NY</td>
+                      <td>
+                        <span class="status-pill status-pill-booked">
+                          <span class="status-pill-icon" aria-hidden="true">
+                            <i class="iconoir-check-circle"></i>
+                          </span>
+                          Fully booked
+                        </span>
+                      </td>
+                    </tr>
+                    <tr
+                      class="trip-table-row"
+                      tabindex="0"
+                      role="button"
+                      data-trip-id="seattle-research-sprint"
+                      aria-label="Seattle research sprint — lodging booked"
+                    >
+                      <td class="trip-table-name">
+                        <strong>Seattle research sprint</strong>
+                        <span class="trip-table-subtitle">User interviews · 1 traveler</span>
+                      </td>
+                      <td class="trip-table-date">Nov 18 – Nov 20</td>
+                      <td class="trip-table-destination">Seattle, WA</td>
+                      <td>
+                        <span class="status-pill status-pill-lodging">
+                          <span class="status-pill-icon" aria-hidden="true">
+                            <i class="iconoir-bed"></i>
+                          </span>
+                          Lodging booked
+                        </span>
+                      </td>
+                    </tr>
+                    <tr
+                      class="trip-table-row"
+                      tabindex="0"
+                      role="button"
+                      data-trip-id="chicago-design-systems-training"
+                      aria-label="Chicago design systems training — flights booked"
+                    >
+                      <td class="trip-table-name">
+                        <strong>Chicago design systems training</strong>
+                        <span class="trip-table-subtitle">Internal enablement · 5 travelers</span>
+                      </td>
+                      <td class="trip-table-date">Dec 2 – Dec 4</td>
+                      <td class="trip-table-destination">Chicago, IL</td>
+                      <td>
+                        <span class="status-pill status-pill-progress">
+                          <span class="status-pill-icon" aria-hidden="true">
+                            <i class="iconoir-airplane"></i>
+                          </span>
+                          Flights booked
+                        </span>
+                      </td>
+                    </tr>
+                    <tr
+                      class="trip-table-row"
+                      tabindex="0"
+                      role="button"
+                      data-trip-id="san-francisco-hiring-panel"
+                      aria-label="San Francisco hiring panel — missing rental car"
+                    >
+                      <td class="trip-table-name">
+                        <strong>San Francisco hiring panel</strong>
+                        <span class="trip-table-subtitle">On-site interviews · 2 travelers</span>
+                      </td>
+                      <td class="trip-table-date">Dec 9 – Dec 10</td>
+                      <td class="trip-table-destination">San Francisco, CA</td>
+                      <td>
+                        <span class="status-pill status-pill-overdue">
+                          <span class="status-pill-icon" aria-hidden="true">
+                            <i class="iconoir-warning-circle"></i>
+                          </span>
+                          Missing rental car
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+          </div>
+
+          <section
+            class="travel-chat-session"
+            id="travel-chat-session"
+            hidden
+            aria-labelledby="travel-chat-title"
+          >
+            <div class="travel-chat-body">
+              <header class="travel-chat-header">
+                <button class="travel-chat-back" id="travel-chat-back" type="button" aria-label="Back to Travel">
+                  <i class="iconoir-nav-arrow-left" aria-hidden="true"></i>
+                </button>
+                <div class="travel-chat-heading">
+                  <p class="section-label">Travel Agent</p>
+                  <div class="travel-chat-title-row">
+                    <h3 id="travel-chat-title">Trip name</h3>
+                    <span class="status-pill status-pill-pending" id="travel-chat-status">
+                      <span class="status-pill-icon" aria-hidden="true">
+                        <i class="iconoir-clock"></i>
+                      </span>
+                      Status
+                    </span>
+                  </div>
+                  <p class="travel-chat-subtitle" id="travel-chat-subtitle">Dates · Destination</p>
+                </div>
+              </header>
+              <div class="travel-chat-thread" id="travel-chat-thread" aria-live="polite"></div>
+            </div>
+            <div class="travel-chat-footer">
+              <div class="travel-chat-suggestions" id="travel-chat-suggestions" hidden></div>
+              <div class="travel-chat-composer">
+                <label class="sr-only" for="travel-session-prompt">Message Travel Agent</label>
+                <div class="input-row input-row-compact">
+                  <input
+                    id="travel-session-prompt"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Tell the agent what you need for this trip…"
+                  />
+                  <button
+                    class="icon-button send-icon"
+                    id="travel-session-send"
+                    type="button"
+                    aria-label="Send message"
+                    disabled
+                  >
+                    <i class="iconoir-arrow-up" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div id="view-feedback-agent" class="agent-view" hidden>
+          <section class="hero-card" aria-labelledby="feedback-agent-heading">
+            <div class="hero-copy">
+              <div class="agent-page-title">
+                <span class="agent-icon agent-icon-feedback agent-icon-lg" aria-hidden="true">
+                  <i class="iconoir-message-text" aria-hidden="true"></i>
+                </span>
+                <p class="eyebrow">Feedback Agent</p>
+              </div>
+              <h2 id="feedback-agent-heading">Clear feedback,<br />delivered with care</h2>
+            </div>
+          </section>
+        </div>
+
+        <div id="view-learning-agent" class="agent-view" hidden>
+          <section class="hero-card" aria-labelledby="learning-agent-heading">
+            <div class="hero-copy">
+              <div class="agent-page-title">
+                <span class="agent-icon agent-icon-learning agent-icon-lg" aria-hidden="true">
+                  <i class="iconoir-graduation-cap" aria-hidden="true"></i>
+                </span>
+                <p class="eyebrow">Learning Agent</p>
+              </div>
+              <h2 id="learning-agent-heading">Grow skills<br />that stick</h2>
+            </div>
+          </section>
+        </div>
+
+        <div id="view-meeting-agent" class="agent-view" hidden>
+          <section class="hero-card" aria-labelledby="meeting-agent-heading">
+            <div class="hero-copy">
+              <div class="agent-page-title">
+                <span class="agent-icon agent-icon-meeting agent-icon-lg" aria-hidden="true">
+                  <i class="iconoir-calendar" aria-hidden="true"></i>
+                </span>
+                <p class="eyebrow">Meeting Agent</p>
+              </div>
+              <h2 id="meeting-agent-heading">Smarter meetings,<br />fewer conflicts</h2>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="peek-backdrop" id="travel-peek" hidden>
+      <div class="peek-shell">
+        <section
+          class="peek-canvas peek-canvas-travel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="travel-peek-title"
+        >
+          <div class="trip-hero peek-trip-hero" id="travel-peek-hero">
+            <div class="trip-hero-overlay">
+              <p class="section-label trip-hero-label">Trip itinerary</p>
+              <h2 id="travel-peek-title">Trip title</h2>
+              <p class="trip-hero-meta" id="travel-peek-meta">Dates · Destination</p>
+              <p class="trip-hero-summary" id="travel-peek-summary">Summary</p>
+            </div>
+          </div>
+          <button class="peek-close" id="travel-peek-close" type="button" aria-label="Close trip details">
+            <i class="iconoir-xmark" aria-hidden="true"></i>
+          </button>
+          <div class="peek-body peek-body-travel">
+            <div class="trip-details" id="travel-peek-details"></div>
+          </div>
+        </section>
+        <div class="peek-ask-float">
+          <div class="input-row peek-input-row">
+            <label class="sr-only" for="travel-peek-prompt">Ask the Travel Agent about this trip</label>
+            <input
+              id="travel-peek-prompt"
+              type="text"
+              autocomplete="off"
+              placeholder="Ask about flights, hotels, or changes…"
+            />
+            <button
+              class="icon-button send-icon"
+              id="travel-peek-send"
+              type="button"
+              aria-label="Send message to Travel Agent"
+              disabled
+            >
+              <i class="iconoir-arrow-up" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="peek-ask-status" id="travel-peek-ask-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+    <div class="peek-backdrop" id="learning-peek" hidden>
+      <div class="peek-shell">
+        <section class="peek-canvas" role="dialog" aria-modal="true" aria-labelledby="peek-title">
+          <div class="peek-hero" id="peek-hero" aria-hidden="true"></div>
+          <button class="peek-close" id="peek-close" type="button" aria-label="Close learning details">
+            <i class="iconoir-xmark" aria-hidden="true"></i>
+          </button>
+          <div class="peek-body">
+            <p class="section-label">Learning details</p>
+            <h2 id="peek-title">Learning title</h2>
+            <div class="peek-detail-grid">
+              <p>
+                <span>Audience</span>
+                <strong id="peek-audience">Designer</strong>
+              </p>
+              <p>
+                <span>Dates</span>
+                <strong id="peek-dates">TBD</strong>
+              </p>
+              <p>
+                <span>Duration</span>
+                <strong id="peek-duration">TBD</strong>
+              </p>
+            </div>
+            <p class="peek-description">
+              The agent will add this learning to the selected person's development plan, include
+              reminders before each session, and suggest follow-up coaching prompts after completion.
+            </p>
+            <fieldset class="peek-enroll-fieldset" id="peek-enroll-fieldset">
+              <legend class="peek-enroll-legend">Who should be enrolled? (select all that apply)</legend>
+              <div class="peek-enroll-options" id="peek-enroll-options"></div>
+            </fieldset>
+            <button class="peek-enroll" id="peek-enroll" type="button">Confirm enrollment</button>
+          </div>
+        </section>
+        <div class="peek-ask-float">
+          <div class="input-row peek-input-row">
+            <label class="sr-only" for="peek-prompt">Ask about this learning</label>
+            <input
+              id="peek-prompt"
+              type="text"
+              autocomplete="off"
+              placeholder="Ask a question about this learning…"
+            />
+            <button
+              class="icon-button send-icon"
+              id="peek-send"
+              type="button"
+              aria-label="Send question to Learning Agent"
+              disabled
+            >
+              <i class="iconoir-arrow-up" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="peek-ask-status" id="peek-ask-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
