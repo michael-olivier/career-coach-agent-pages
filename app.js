@@ -141,6 +141,7 @@ const chatNavLists = document.querySelectorAll(".chat-nav-list, #flyout-chats");
 const pageNavItems = document.querySelectorAll(".page-nav-item");
 
 const DEFAULT_ROUTE = "/pages/home";
+const mainContent = document.querySelector(".main-content");
 const homeTopbar = document.querySelector("#home-topbar");
 const workspacePageLabel = document.querySelector("#workspace-page-label");
 const workspacePageHeading = document.querySelector("#workspace-page-heading");
@@ -3040,6 +3041,8 @@ const switchAgentView = (viewName, options = {}) => {
     const isActive = view.id === `view-${resolvedView}`;
     view.hidden = !isActive;
   });
+
+  mainContent?.classList.toggle("is-workspace-layout", resolvedView === "workspace-pages");
 
   agentNavItems.forEach((item) => {
     const isActive = resolvedView !== "home" && item.dataset.agentView === resolvedView;

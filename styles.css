@@ -541,9 +541,13 @@ a.rail-button {
   line-height: 1.5;
 }
 
+.main-content.is-workspace-layout,
 .main-content:has(#view-workspace-pages:not([hidden])) {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  /* Wider than home (1200px); caps at 16" MacBook Pro logical width on ultrawide. */
+  max-width: min(100%, 1728px);
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
@@ -1170,11 +1174,13 @@ textarea::placeholder {
   --workspace-control-pad-y: 12px;
   --workspace-control-pad-x: 18px;
   --workspace-control-height: calc(var(--workspace-control-pad-y) * 2 + 1.25rem);
+  --workspace-list-max: 500px;
   display: grid;
-  grid-template-columns: minmax(300px, 38%) minmax(0, 1fr);
+  grid-template-columns: minmax(280px, 500px) minmax(0, 1fr);
   flex: 1 1 0;
   gap: 18px;
   align-items: stretch;
+  width: 100%;
   min-height: 0;
 }
 
@@ -1182,6 +1188,8 @@ textarea::placeholder {
   display: flex;
   flex-direction: column;
   gap: 0;
+  width: 100%;
+  max-width: var(--workspace-list-max);
   height: 100%;
   max-height: 100%;
   min-height: 0;
@@ -3613,8 +3621,13 @@ body.document-canvas-open {
     grid-template-columns: 1fr;
   }
 
+  .main-content.is-workspace-layout,
   .main-content:has(#view-workspace-pages:not([hidden])) {
     min-height: auto;
+  }
+
+  .workspace-list-column {
+    max-width: none;
   }
 
   .app-shell {
