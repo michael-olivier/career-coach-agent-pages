@@ -43,6 +43,12 @@ const itemPeekSections = document.querySelector("#item-peek-sections");
 const itemPeekPrompt = document.querySelector("#item-peek-prompt");
 const itemPeekSend = document.querySelector("#item-peek-send");
 const itemPeekAskStatus = document.querySelector("#item-peek-ask-status");
+const documentCanvas = document.querySelector("#document-canvas");
+const documentCanvasClose = document.querySelector("#document-canvas-close");
+const documentCanvasEyebrow = document.querySelector("#document-canvas-eyebrow");
+const documentCanvasTitle = document.querySelector("#document-canvas-title");
+const documentCanvasSubtitle = document.querySelector("#document-canvas-subtitle");
+const documentCanvasBody = document.querySelector("#document-canvas-body");
 const travelAgentChat = document.querySelector("#travel-agent-chat");
 const travelLanding = document.querySelector("#travel-landing");
 const travelChatSession = document.querySelector("#travel-chat-session");
@@ -203,7 +209,7 @@ const WORKSPACE_PAGES = {
             },
           ],
           actions: [
-            { label: "Open promotion packet", primary: true },
+            { label: "Open promotion packet", primary: true, action: "promotion-packet-jordan-lee" },
             { label: "Schedule calibration prep" },
           ],
         },
@@ -471,7 +477,9 @@ const WORKSPACE_PAGES = {
               body: "Org-level design strategy, mentorship of senior ICs, and measurable portfolio outcomes across two product lines.",
             },
           ],
-          actions: [{ label: "Review promotion packet", primary: true }],
+          actions: [
+            { label: "Review promotion packet", primary: true, action: "promotion-packet-jordan-lee" },
+          ],
         },
       },
       {
@@ -800,6 +808,76 @@ const WORKSPACE_PAGES = {
         },
       },
     ],
+  },
+};
+
+const WORKSPACE_DOCUMENTS = {
+  "promotion-packet-jordan-lee": {
+    eyebrow: "Career Coach · Promotion packet",
+    title: "Principal Designer promotion",
+    subtitle: "Jordan Lee · Design · submitted Oct 8, 2026",
+    body: `<p class="document-lede">
+      This packet summarizes Jordan Lee’s case for promotion to <strong>Principal Designer</strong>,
+      including scope evidence, cross-functional impact, and stakeholder feedback collected over the
+      last two review cycles.
+    </p>
+    <section>
+      <h2>Executive summary</h2>
+      <p>
+        Jordan has operated at principal scope for three consecutive quarters by leading ambiguous
+        platform strategy work, coaching senior ICs through critique, and aligning product, engineering,
+        and research on a unified onboarding vision. Promotion is recommended with high confidence
+        entering Q4 calibration.
+      </p>
+    </section>
+    <section>
+      <h2>Scope &amp; impact</h2>
+      <h3>Platform onboarding strategy</h3>
+      <p>
+        Owned the end-to-end strategy for onboarding redesign across web and mobile, unifying three
+        legacy flows into a single progressive disclosure model. Drove executive readouts and
+        secured alignment on a phased rollout that reduced time-to-value by an estimated 18%.
+      </p>
+      <h3>Org-level facilitation</h3>
+      <p>
+        Facilitated monthly design–engineering forums on technical debt tradeoffs, resulting in a
+        shared prioritization rubric adopted by two additional product pillars. Mentored Maya Chen
+        and Ari Reed on stakeholder narrative structure ahead of partner critiques.
+      </p>
+      <h3>Principal-level expectations</h3>
+      <ul>
+        <li>Sets direction for multi-squad initiatives without direct authority over all contributors.</li>
+        <li>Coaches other senior ICs on scope framing and executive communication.</li>
+        <li>Anticipates cross-org risks and proposes mitigation before escalation.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Stakeholder feedback</h2>
+      <blockquote>
+        “Jordan reframed a contentious platform debate into a decision we could all commit to. That
+        facilitation changed how we run quarterly planning.”
+        <footer>— Priya N., Director of Product</footer>
+      </blockquote>
+      <blockquote>
+        “The onboarding strategy doc became the source of truth for eng leads. Jordan’s clarity on
+        tradeoffs saved us at least one mis-scoped sprint.”
+        <footer>— Marcus T., Engineering Manager</footer>
+      </blockquote>
+      <blockquote>
+        “Jordan consistently elevates critique quality. Senior designers on the team ask for Jordan’s
+        review before director readouts.”
+        <footer>— Lena Ortiz, Senior Designer</footer>
+      </blockquote>
+    </section>
+    <section>
+      <h2>Manager recommendation</h2>
+      <p>
+        Jordan is ready for Principal Designer. Scope, influence, and coaching behaviors match our
+        career framework at the principal IC bar. I recommend approval for the Q4 calibration cycle
+        with a focus on sustaining org-wide facilitation as platform work expands in H1.
+      </p>
+      <p class="document-signature"><strong>Michael Olivier</strong><br />Design Manager · Oct 8, 2026</p>
+    </section>`,
   },
 };
 
@@ -1482,7 +1560,10 @@ const renderWorkspaceDetail = (item) => {
   const actions = (detail.actions ?? [])
     .map((action) => {
       const className = action.primary ? "primary-button" : "secondary-button";
-      return `<button type="button" class="${className}">${action.label}</button>`;
+      const actionAttr = action.action
+        ? ` data-workspace-action="${action.action}"`
+        : "";
+      return `<button type="button" class="${className}"${actionAttr}>${action.label}</button>`;
     })
     .join("");
 
@@ -1777,6 +1858,47 @@ const updateWorkspaceAgentSendState = () => {
   workspaceAgentSend.disabled = workspaceAgentPrompt.value.trim().length === 0;
 };
 
+let documentCanvasReturnFocus = null;
+
+const openDocumentCanvas = (documentId) => {
+  const doc = WORKSPACE_DOCUMENTS[documentId];
+  if (!doc || !documentCanvas || !documentCanvasBody) {
+    return;
+  }
+
+  documentCanvasReturnFocus = document.activeElement;
+  if (documentCanvasEyebrow) {
+    documentCanvasEyebrow.textContent = doc.eyebrow ?? "";
+  }
+  if (documentCanvasTitle) {
+    documentCanvasTitle.textContent = doc.title ?? "";
+  }
+  if (documentCanvasSubtitle) {
+    documentCanvasSubtitle.textContent = doc.subtitle ?? "";
+  }
+  documentCanvasBody.innerHTML = doc.body ?? "";
+  documentCanvas.hidden = false;
+  document.body.classList.add("document-canvas-open");
+  documentCanvasClose?.focus();
+};
+
+const closeDocumentCanvas = () => {
+  if (!documentCanvas || documentCanvas.hidden) {
+    return;
+  }
+
+  documentCanvas.hidden = true;
+  document.body.classList.remove("document-canvas-open");
+  if (documentCanvasBody) {
+    documentCanvasBody.innerHTML = "";
+  }
+
+  if (documentCanvasReturnFocus?.focus) {
+    documentCanvasReturnFocus.focus();
+  }
+  documentCanvasReturnFocus = null;
+};
+
 const submitWorkspaceAgentPrompt = () => {
   if (!workspaceAgentPrompt) {
     return;
@@ -1816,6 +1938,20 @@ const initWorkspacePages = () => {
       updateHash: true,
     });
   });
+
+  workspaceDetail?.addEventListener("click", (event) => {
+    const actionButton = event.target.closest("[data-workspace-action]");
+    if (!actionButton) {
+      return;
+    }
+
+    const documentId = actionButton.dataset.workspaceAction;
+    if (WORKSPACE_DOCUMENTS[documentId]) {
+      openDocumentCanvas(documentId);
+    }
+  });
+
+  documentCanvasClose?.addEventListener("click", closeDocumentCanvas);
 
   workspaceList?.addEventListener("keydown", (event) => {
     if (!currentWorkspacePage || (event.key !== "ArrowDown" && event.key !== "ArrowUp")) {
@@ -3049,6 +3185,11 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeMenu();
     closeNavFlyouts();
+
+    if (documentCanvas && !documentCanvas.hidden) {
+      closeDocumentCanvas();
+      return;
+    }
 
     if (travelPeek && !travelPeek.hidden) {
       closeTravelPeek();

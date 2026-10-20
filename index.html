@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./assets/vendor/iconoir.css" />
-    <link rel="stylesheet" href="./styles.css?v=c1d3365-4b82af5a" />
+    <link rel="stylesheet" href="./styles.css?v=c9394b0-1506d587" />
   </head>
   <body>
     <div class="app-shell" id="app-shell">
@@ -2427,6 +2427,26 @@
         </section>
       </div>
     </div>
-    <script src="./app.js?v=c1d3365-4b82af5a"></script>
+    <div class="document-canvas" id="document-canvas" hidden>
+      <header class="document-canvas-toolbar">
+        <button
+          class="document-canvas-close icon-button"
+          id="document-canvas-close"
+          type="button"
+          aria-label="Close document"
+        >
+          <i class="iconoir-xmark" aria-hidden="true"></i>
+        </button>
+        <div class="document-canvas-toolbar-copy">
+          <p class="section-label" id="document-canvas-eyebrow"></p>
+          <h1 class="document-canvas-title" id="document-canvas-title"></h1>
+          <p class="document-canvas-subtitle" id="document-canvas-subtitle"></p>
+        </div>
+      </header>
+      <div class="document-canvas-scroll">
+        <article class="document-sheet" id="document-canvas-body"></article>
+      </div>
+    </div>
+    <script src="./app.js?v=c9394b0-1506d587"></script>
   </body>
 </html>
