@@ -152,9 +152,20 @@ const workspaceDetail = document.querySelector("#workspace-detail");
 const workspaceAgentPrompt = document.querySelector("#workspace-agent-prompt");
 const workspaceAgentSend = document.querySelector("#workspace-agent-send");
 const workspaceAgentStatus = document.querySelector("#workspace-agent-status");
+const workspacePageSection = document.querySelector("#view-workspace-pages .workspace-page");
 
 let currentWorkspacePage;
 let workspaceRouteSync = false;
+let workspaceRenderToken = 0;
+
+const WORKSPACE_SKELETON_ROW_COUNT = 7;
+const WORKSPACE_LIST_LOAD_MS = 340;
+const WORKSPACE_LIST_LOAD_INITIAL_MS = 680;
+
+let workspaceListInitialLoadPending = true;
+
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const AGENT_LABELS = {
   "career-coach": "Career Coach",
@@ -1523,6 +1534,91 @@ const renderWorkspaceStatusPill = (status) => {
   </span>`;
 };
 
+const renderWorkspaceListSkeleton = (count = WORKSPACE_SKELETON_ROW_COUNT) =>
+  Array.from(
+    { length: count },
+    (_, index) => `<div
+    class="task-row workspace-skeleton-row"
+    aria-hidden="true"
+    style="--skeleton-delay: ${index * 45}ms"
+  >
+    <div class="task-leading"><span class="skeleton skeleton-avatar"></span></div>
+    <div class="task-copy skeleton-lines">
+      <span class="skeleton skeleton-line skeleton-line-title"></span>
+      <span class="skeleton skeleton-line skeleton-line-subtitle"></span>
+    </div>
+  </div>`,
+  ).join("");
+
+const renderWorkspaceDetailSkeleton = () =>
+  `<div class="workspace-detail-skeleton" aria-hidden="true">
+    <span class="skeleton skeleton-line skeleton-line-eyebrow"></span>
+    <span class="skeleton skeleton-line skeleton-line-heading"></span>
+    <span class="skeleton skeleton-line skeleton-line-summary"></span>
+    <div class="workspace-detail-skeleton-meta">
+      <span class="skeleton skeleton-line"></span>
+      <span class="skeleton skeleton-line"></span>
+      <span class="skeleton skeleton-line"></span>
+    </div>
+    <div class="workspace-detail-skeleton-sections">
+      <span class="skeleton skeleton-block"></span>
+      <span class="skeleton skeleton-block skeleton-block-short"></span>
+    </div>
+  </div>`;
+
+const playViewEnter = (viewEl) => {
+  if (!viewEl || prefersReducedMotion()) {
+    return;
+  }
+
+  viewEl.classList.remove("view-enter");
+  void viewEl.offsetWidth;
+  viewEl.classList.add("view-enter");
+  viewEl.addEventListener(
+    "animationend",
+    () => {
+      viewEl.classList.remove("view-enter");
+    },
+    { once: true },
+  );
+};
+
+const playWorkspacePageEnter = () => {
+  if (!workspacePageSection || prefersReducedMotion()) {
+    return;
+  }
+
+  workspacePageSection.classList.remove("workspace-page-enter");
+  void workspacePageSection.offsetWidth;
+  workspacePageSection.classList.add("workspace-page-enter");
+  workspacePageSection.addEventListener(
+    "animationend",
+    () => {
+      workspacePageSection.classList.remove("workspace-page-enter");
+    },
+    { once: true },
+  );
+};
+
+const staggerWorkspaceListEnter = () => {
+  if (!workspaceList || prefersReducedMotion()) {
+    return;
+  }
+
+  workspaceList.querySelectorAll(".workspace-list-item").forEach((row, index) => {
+    row.style.setProperty("--list-enter-delay", `${index * 36}ms`);
+    row.classList.add("list-item-enter");
+    row.addEventListener(
+      "animationend",
+      () => {
+        row.classList.remove("list-item-enter");
+        row.style.removeProperty("--list-enter-delay");
+      },
+      { once: true },
+    );
+  });
+};
+
 const renderWorkspaceListItem = (item, selectedId) => {
   const isActive = item.id === selectedId;
 
@@ -1608,10 +1704,49 @@ const selectWorkspaceItem = (pageKey, itemId, { updateHash = false } = {}) => {
     });
 
   workspaceDetail.innerHTML = renderWorkspaceDetail(item);
+  if (!prefersReducedMotion() && !workspaceDetail.classList.contains("is-loading")) {
+    const inner = workspaceDetail.querySelector(".workspace-detail-inner");
+    inner?.classList.add("detail-enter");
+    inner?.addEventListener(
+      "animationend",
+      () => {
+        inner.classList.remove("detail-enter");
+      },
+      { once: true },
+    );
+  }
 
   if (updateHash && !workspaceRouteSync) {
     setRouteHash(`/pages/${pageKey}/${item.id}`, { replace: true });
   }
+};
+
+const commitWorkspacePage = (pageKey, itemId, token) => {
+  const config = WORKSPACE_PAGES[pageKey];
+  if (!config || !workspaceList || !workspaceDetail || token !== workspaceRenderToken) {
+    return;
+  }
+
+  workspacePageSection?.classList.remove("is-content-loading");
+
+  if (workspacePageMetric) {
+    workspacePageMetric.textContent = `${config.items.length} items`;
+  }
+
+  workspaceList.classList.remove("is-loading");
+  workspaceList.removeAttribute("aria-busy");
+  workspaceDetail.classList.remove("is-loading");
+
+  const selectedId =
+    config.items.find((entry) => entry.id === itemId)?.id ?? config.items[0]?.id;
+
+  workspaceList.innerHTML = config.items
+    .map((item) => renderWorkspaceListItem(item, selectedId))
+    .join("");
+
+  staggerWorkspaceListEnter();
+  selectWorkspaceItem(pageKey, selectedId);
+  workspaceListInitialLoadPending = false;
 };
 
 const renderWorkspacePage = (pageKey, itemId) => {
@@ -1619,6 +1754,13 @@ const renderWorkspacePage = (pageKey, itemId) => {
   if (!config || !workspaceList || !workspaceDetail) {
     return;
   }
+
+  const token = (workspaceRenderToken += 1);
+  const loadMs = prefersReducedMotion()
+    ? 0
+    : workspaceListInitialLoadPending
+      ? WORKSPACE_LIST_LOAD_INITIAL_MS
+      : WORKSPACE_LIST_LOAD_MS;
 
   currentWorkspacePage = pageKey;
 
@@ -1635,7 +1777,10 @@ const renderWorkspacePage = (pageKey, itemId) => {
   }
 
   if (workspacePageMetric) {
-    workspacePageMetric.textContent = `${config.items.length} items`;
+    workspacePageMetric.innerHTML =
+      loadMs > 0
+        ? `<span class="skeleton skeleton-metric" aria-hidden="true"></span>`
+        : `${config.items.length} items`;
   }
 
   if (workspaceAgentStatus) {
@@ -1643,15 +1788,23 @@ const renderWorkspacePage = (pageKey, itemId) => {
   }
 
   workspaceList.setAttribute("aria-label", `${config.label} list`);
+  workspacePageSection?.classList.add("is-content-loading");
+  workspaceList.classList.add("is-loading");
+  workspaceList.setAttribute("aria-busy", "true");
+  workspaceList.innerHTML = renderWorkspaceListSkeleton();
+  workspaceDetail.classList.add("is-loading");
+  workspaceDetail.innerHTML = renderWorkspaceDetailSkeleton();
 
-  const selectedId =
-    config.items.find((entry) => entry.id === itemId)?.id ?? config.items[0]?.id;
+  playWorkspacePageEnter();
 
-  workspaceList.innerHTML = config.items
-    .map((item) => renderWorkspaceListItem(item, selectedId))
-    .join("");
+  if (loadMs === 0) {
+    commitWorkspacePage(pageKey, itemId, token);
+    return;
+  }
 
-  selectWorkspaceItem(pageKey, selectedId);
+  window.setTimeout(() => {
+    commitWorkspacePage(pageKey, itemId, token);
+  }, loadMs);
 };
 
 const openWorkspaceListItem = (pageKey, itemId) => {
@@ -3041,6 +3194,8 @@ const switchAgentView = (viewName, options = {}) => {
     const isActive = view.id === `view-${resolvedView}`;
     view.hidden = !isActive;
   });
+
+  playViewEnter(document.querySelector(`#view-${resolvedView}`));
 
   mainContent?.classList.toggle("is-workspace-layout", resolvedView === "workspace-pages");
 
