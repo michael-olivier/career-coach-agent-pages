@@ -2451,13 +2451,12 @@ const renderTravelChatSuggestions = (labels) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = label;
-    button.addEventListener("click", () => {
-      submitTravelSessionMessage(label);
-    });
+    button.dataset.suggestionText = label;
     travelChatSuggestions.appendChild(button);
   });
 
   travelChatSuggestions.hidden = false;
+  initPromptSuggestionButtons(travelChatSuggestions);
 };
 
 const setTravelChatStatusPill = (trip) => {
@@ -2872,13 +2871,12 @@ const renderAgentChatSuggestions = (labels) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = label;
-    button.addEventListener("click", () => {
-      submitAgentChatSessionMessage(label);
-    });
+    button.dataset.suggestionText = label;
     agentChatSuggestions.appendChild(button);
   });
 
   agentChatSuggestions.hidden = false;
+  initPromptSuggestionButtons(agentChatSuggestions);
 };
 
 const setActiveChatNav = (chatId) => {
@@ -3088,6 +3086,7 @@ const submitAgentChatSessionMessage = (messageOverride) => {
 
   agentSessionPrompt.value = "";
   updateAgentSessionSendState();
+  clearPromptSuggestionsForInput(agentSessionPrompt);
   agentSessionPrompt.focus();
 };
 
@@ -3387,6 +3386,7 @@ const wireAgentChatComposer = ({ promptInput, sendButton, micButton, sourceAgent
     submitComposerToAgentChat(message, sourceAgentId);
     promptInput.value = "";
     updateComposerSendState();
+    clearPromptSuggestionsForInput(promptInput);
   });
   promptInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -3417,6 +3417,7 @@ const submitCareerCoachPrompt = () => {
   attachmentStatus.textContent = "";
   promptInput.value = "";
   updateSendState();
+  clearPromptSuggestionsForInput(promptInput);
   submitComposerToAgentChat(message, "career-coach");
 };
 
@@ -3519,29 +3520,117 @@ wireAgentChatComposer({
   sourceAgentId: "meeting-agent",
 });
 
-document.querySelectorAll("[data-learning-agent-prompt]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (!learningAgentPrompt) {
+const getPromptSuggestionText = (button) => {
+  const dataset = button.dataset;
+  return (
+    dataset.suggestionText ??
+    dataset.homePrompt ??
+    dataset.coachPrompt ??
+    dataset.travelPrompt ??
+    dataset.learningAgentPrompt ??
+    dataset.feedbackAgentPrompt ??
+    dataset.meetingAgentPrompt ??
+    button.textContent.trim()
+  );
+};
+
+const findComposerInputForSuggestionContainer = (container) => {
+  if (!container) {
+    return null;
+  }
+
+  if (container.classList.contains("travel-chat-suggestions")) {
+    const footer = container.closest(".travel-chat-footer");
+    return footer?.querySelector(".travel-chat-composer input[type='text']") ?? null;
+  }
+
+  const hero = container.closest(".hero-card");
+  return hero?.querySelector(".chat-composer input[type='text']") ?? null;
+};
+
+const getPromptSuggestionContainersForInput = (input) => {
+  if (!input) {
+    return [];
+  }
+
+  const footer = input.closest(".travel-chat-footer");
+  if (footer) {
+    const suggestions = footer.querySelector(".travel-chat-suggestions");
+    return suggestions ? [suggestions] : [];
+  }
+
+  const hero = input.closest(".hero-card");
+  if (!hero) {
+    return [];
+  }
+
+  return [...hero.querySelectorAll(".prompt-grid")];
+};
+
+const clearPromptSuggestionSelection = (container) => {
+  if (!container) {
+    return;
+  }
+
+  container.querySelectorAll("button").forEach((button) => {
+    button.classList.remove("is-selected");
+    button.setAttribute("aria-pressed", "false");
+  });
+};
+
+const clearPromptSuggestionsForInput = (input) => {
+  getPromptSuggestionContainersForInput(input).forEach(clearPromptSuggestionSelection);
+};
+
+const selectPromptSuggestion = (container, button, input) => {
+  const text = getPromptSuggestionText(button);
+  if (!text || !input) {
+    return;
+  }
+
+  container.querySelectorAll("button").forEach((entry) => {
+    const isSelected = entry === button;
+    entry.classList.toggle("is-selected", isSelected);
+    entry.setAttribute("aria-pressed", String(isSelected));
+  });
+
+  input.value = text;
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.focus();
+};
+
+const initPromptSuggestionButtons = (root = document) => {
+  root.querySelectorAll(".prompt-grid button, .travel-chat-suggestions button").forEach((button) => {
+    if (button.dataset.promptSuggestionBound === "1") {
       return;
     }
 
-    learningAgentPrompt.value = button.dataset.learningAgentPrompt;
-    learningAgentPrompt.focus();
-    learningAgentPrompt.dispatchEvent(new Event("input", { bubbles: true }));
-  });
-});
+    button.dataset.promptSuggestionBound = "1";
+    button.type = button.type || "button";
+    button.setAttribute("aria-pressed", "false");
 
-document.querySelectorAll("[data-travel-prompt]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (!travelPrompt) {
-      return;
-    }
-
-    travelPrompt.value = button.dataset.travelPrompt;
-    travelPrompt.focus();
-    travelPrompt.dispatchEvent(new Event("input", { bubbles: true }));
+    button.addEventListener("click", () => {
+      const container = button.closest(".prompt-grid, .travel-chat-suggestions");
+      const input = findComposerInputForSuggestionContainer(container);
+      selectPromptSuggestion(container, button, input);
+    });
   });
-});
+};
+
+const syncPromptSuggestionSelectionForInput = (input) => {
+  const value = input.value.trim();
+  getPromptSuggestionContainersForInput(input).forEach((container) => {
+    let matched = false;
+    container.querySelectorAll("button").forEach((button) => {
+      const isSelected = !matched && getPromptSuggestionText(button) === value && value.length > 0;
+      if (isSelected) {
+        matched = true;
+      }
+      button.classList.toggle("is-selected", isSelected);
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+  });
+};
 
 const updateHomeSendState = () => {
   if (!homeSendButton || !homePrompt) {
@@ -3551,22 +3640,30 @@ const updateHomeSendState = () => {
   homeSendButton.disabled = homePrompt.value.trim().length === 0;
 };
 
-const setHomePrompt = (value) => {
-  if (!homePrompt) {
-    return;
-  }
-
-  homePrompt.value = value;
-  homePrompt.focus();
+homePrompt?.addEventListener("input", () => {
   updateHomeSendState();
-};
-
-homePrompt?.addEventListener("input", updateHomeSendState);
-
-document.querySelectorAll("[data-home-prompt]").forEach((button) => {
-  button.addEventListener("click", () => {
-    setHomePrompt(button.dataset.homePrompt);
-  });
+  syncPromptSuggestionSelectionForInput(homePrompt);
+});
+promptInput?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(promptInput);
+});
+travelPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(travelPrompt);
+});
+learningAgentPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(learningAgentPrompt);
+});
+feedbackAgentPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(feedbackAgentPrompt);
+});
+meetingAgentPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(meetingAgentPrompt);
+});
+agentSessionPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(agentSessionPrompt);
+});
+travelSessionPrompt?.addEventListener("input", () => {
+  syncPromptSuggestionSelectionForInput(travelSessionPrompt);
 });
 
 homeMicButton?.addEventListener("click", () => {
@@ -3585,6 +3682,7 @@ const submitHomePrompt = () => {
 
   homePrompt.value = "";
   updateHomeSendState();
+  clearPromptSuggestionsForInput(homePrompt);
   submitComposerToAgentChat(message, "home");
 };
 
@@ -3596,6 +3694,7 @@ homePrompt?.addEventListener("keydown", (event) => {
   }
 });
 
+initPromptSuggestionButtons();
 updateSendState();
 updateHomeSendState();
 
@@ -4017,18 +4116,6 @@ const submitPeekQuestion = () => {
   submitComposerToAgentChat(contextualPrompt, "learning-agent");
 };
 
-document.querySelectorAll("[data-feedback-agent-prompt]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (!feedbackAgentPrompt) {
-      return;
-    }
-
-    feedbackAgentPrompt.value = button.dataset.feedbackAgentPrompt;
-    feedbackAgentPrompt.focus();
-    feedbackAgentPrompt.dispatchEvent(new Event("input", { bubbles: true }));
-  });
-});
-
 const feedbackRequestsSection = document.querySelector(".feedback-requests-section");
 const feedbackRequestsToggle = document.querySelector(".feedback-requests-toggle");
 
@@ -4345,6 +4432,7 @@ const submitTravelSessionMessage = (messageOverride) => {
 
   travelSessionPrompt.value = "";
   updateTravelSessionSendState();
+  clearPromptSuggestionsForInput(travelSessionPrompt);
   travelSessionPrompt.focus();
 };
 

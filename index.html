@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./assets/vendor/iconoir.css" />
-    <link rel="stylesheet" href="./styles.css?v=5074a5b-0dfccf2d?v=workspace-layout" />
+    <link rel="stylesheet" href="./styles.css?v=39d8eb4-d5898ae5?v=workspace-layout" />
   </head>
   <body>
     <div class="app-shell" id="app-shell">
@@ -711,11 +711,24 @@
           </div>
 
           <div class="prompt-grid" aria-label="Suggested prompts">
-            <button>Summarize this week's check-ins</button>
-            <button>Draft growth goals for my Senior Designer</button>
-            <button>Find feedback themes across my team</button>
-            <button>Prepare for upcoming 1:1s</button>
-            <button>Recommend learning paths by level</button>
+            <button type="button" data-coach-prompt="Summarize this week's check-ins for my team.">
+              Summarize this week's check-ins
+            </button>
+            <button
+              type="button"
+              data-coach-prompt="Draft growth goals for my Senior Designer based on recent feedback and Q4 priorities."
+            >
+              Draft growth goals for my Senior Designer
+            </button>
+            <button type="button" data-coach-prompt="Find feedback themes across my team from the last 30 days.">
+              Find feedback themes across my team
+            </button>
+            <button type="button" data-coach-prompt="Prepare talking points for my upcoming 1:1s this week.">
+              Prepare for upcoming 1:1s
+            </button>
+            <button type="button" data-coach-prompt="Recommend learning paths by designer level for my team.">
+              Recommend learning paths by level
+            </button>
           </div>
         </section>
 
@@ -2447,6 +2460,6 @@
         <article class="document-sheet" id="document-canvas-body"></article>
       </div>
     </div>
-    <script src="./app.js?v=5074a5b-0dfccf2d?v=workspace-layout"></script>
+    <script src="./app.js?v=39d8eb4-d5898ae5?v=workspace-layout"></script>
   </body>
 </html>
