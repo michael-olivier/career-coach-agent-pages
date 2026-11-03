@@ -296,6 +296,16 @@ a.rail-button {
   object-fit: contain;
 }
 
+.brand-mark--logo {
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.brand-mark--logo img {
+  object-fit: cover;
+}
+
 .brand-wordmark {
   letter-spacing: 0.14em;
 }

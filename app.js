@@ -1083,7 +1083,7 @@ const SEED_CHAT_DETAILS = {
   },
 };
 
-const NEXUS_PEOPLE_OS_SOURCE = { name: "Nexus People OS", logo: "./assets/nexus-mark.svg" };
+const NEXUS_PEOPLE_OS_SOURCE = { name: "Nexus People OS", logo: "./assets/nexus-logo.png" };
 
 const AGENT_CHAT_SOURCES = {
   "career-coach": [
