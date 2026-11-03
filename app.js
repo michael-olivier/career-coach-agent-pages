@@ -1,3 +1,40 @@
+/** Iconoir-style slugs in data → Lucide `data-lucide` names */
+const LUCIDE_ICON_ALIASES = {
+  "nav-arrow-left": "chevron-left",
+  "nav-arrow-right": "chevron-right",
+  "nav-arrow-down": "chevron-down",
+  "task-list": "list-todo",
+  group: "users",
+  "graph-up": "trending-up",
+  "message-text": "message-square-text",
+  "book-stack": "library-big",
+  "layout-left": "panel-left",
+  sparks: "sparkles",
+  "chat-bubble": "message-circle",
+  microphone: "mic",
+  "emoji-sad": "frown",
+  "emoji-blink-right": "meh",
+  "warning-circle": "alert-circle",
+  collapse: "chevrons-up",
+  expand: "chevrons-down",
+  airplane: "plane",
+  pin: "map-pin",
+  xmark: "x",
+  check: "check",
+  book: "book-open",
+};
+
+const toLucideIcon = (slug) => LUCIDE_ICON_ALIASES[slug] ?? slug;
+
+const lucideIconMarkup = (slug, extraAttrs = 'aria-hidden="true"') =>
+  `<i data-lucide="${toLucideIcon(slug)}" ${extraAttrs}></i>`;
+
+const refreshLucide = (root) => {
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons({ attrs: { "stroke-width": "1.5" } }, root ?? document);
+  }
+};
+
 const plusButton = document.querySelector("#plus-button");
 const coachMenu = document.querySelector("#coach-menu");
 const filePicker = document.querySelector("#file-picker");
@@ -1083,7 +1120,7 @@ const SEED_CHAT_DETAILS = {
   },
 };
 
-const NEXUS_PEOPLE_OS_SOURCE = { name: "Nexus People OS", logo: "./assets/nexus-logo.png" };
+const NEXUS_PEOPLE_OS_SOURCE = { name: "Nexus People OS", logo: "./assets/nexus-logo.png?v=2026-outlined" };
 
 const AGENT_CHAT_SOURCES = {
   "career-coach": [
@@ -1363,7 +1400,7 @@ const createAgentMessageActions = (sources, copyText) => {
     button.type = "button";
     button.className = "chat-agent-action";
     button.setAttribute("aria-label", label);
-    button.innerHTML = `<i class="iconoir-${icon}" aria-hidden="true"></i>`;
+    button.innerHTML = lucideIconMarkup(icon);
     bar.appendChild(button);
   });
 
@@ -1372,7 +1409,7 @@ const createAgentMessageActions = (sources, copyText) => {
     copyButton.type = "button";
     copyButton.className = "chat-agent-action";
     copyButton.setAttribute("aria-label", "Copy response");
-    copyButton.innerHTML = `<i class="iconoir-copy" aria-hidden="true"></i>`;
+    copyButton.innerHTML = lucideIconMarkup("copy");
     copyButton.addEventListener("click", async () => {
       const copied = await copyTextToClipboard(copyText);
       copyButton.setAttribute("aria-label", copied ? "Copied" : "Copy response");
@@ -1406,13 +1443,14 @@ const createAgentMessageActions = (sources, copyText) => {
       button.innerHTML = `<img src="${source.logo}" alt="" />`;
     } else {
       button.classList.add("chat-source-icon");
-      button.innerHTML = `<i class="iconoir-${source.icon ?? "book"}" aria-hidden="true"></i>`;
+      button.innerHTML = lucideIconMarkup(source.icon ?? "book");
     }
 
     sourcesGroup.appendChild(button);
   });
 
   bar.appendChild(sourcesGroup);
+  refreshLucide(bar);
   return bar;
 };
 
@@ -1517,7 +1555,7 @@ const renderWorkspaceLeading = (leading) => {
   }
 
   if (leading.type === "agent") {
-    return `<div class="task-leading"><span class="agent-icon agent-icon-${leading.agent} task-agent-icon" aria-hidden="true"><i class="iconoir-${leading.icon}" aria-hidden="true"></i></span></div>`;
+    return `<div class="task-leading"><span class="agent-icon agent-icon-${leading.agent} task-agent-icon" aria-hidden="true">${lucideIconMarkup(leading.icon)}</span></div>`;
   }
 
   return "";
@@ -1529,7 +1567,7 @@ const renderWorkspaceStatusPill = (status) => {
   }
 
   return `<span class="status-pill ${status.className}">
-    <span class="status-pill-icon" aria-hidden="true"><i class="iconoir-${status.icon}"></i></span>
+    <span class="status-pill-icon" aria-hidden="true">${lucideIconMarkup(status.icon)}</span>
     ${status.label}
   </span>`;
 };
@@ -1743,6 +1781,7 @@ const commitWorkspacePage = (pageKey, itemId, token) => {
   workspaceList.innerHTML = config.items
     .map((item) => renderWorkspaceListItem(item, selectedId))
     .join("");
+  refreshLucide(workspaceList);
 
   staggerWorkspaceListEnter();
   selectWorkspaceItem(pageKey, selectedId);
@@ -2182,7 +2221,7 @@ const createFlightTicketCard = (flight) => {
       </div>
       <div class="flight-ticket-path" aria-hidden="true">
         <span class="flight-ticket-line"></span>
-        <i class="iconoir-airplane"></i>
+        ${lucideIconMarkup("airplane")}
       </div>
       <div class="flight-ticket-endpoint flight-ticket-endpoint-dest">
         <span class="flight-ticket-city">${flight.destCity}</span>
@@ -2467,10 +2506,11 @@ const setTravelChatStatusPill = (trip) => {
   travelChatStatus.className = `status-pill ${trip.statusClass ?? "status-pill-pending"}`;
   travelChatStatus.innerHTML = `
     <span class="status-pill-icon" aria-hidden="true">
-      <i class="iconoir-${trip.statusIcon ?? "clock"}"></i>
+      ${lucideIconMarkup(trip.statusIcon ?? "clock")}
     </span>
     ${trip.statusLabel ?? "In progress"}
   `;
+  refreshLucide(travelChatStatus);
 };
 
 const closeTravelChatSession = (options = {}) => {
@@ -4283,7 +4323,7 @@ const renderTravelPeekDetails = (details = []) => {
       (detail) => `
         <div class="trip-detail-row">
           <span class="trip-detail-icon" aria-hidden="true">
-            <i class="iconoir-${detail.icon}"></i>
+            ${lucideIconMarkup(detail.icon)}
           </span>
           <div>
             <strong>${detail.label}</strong>
@@ -4293,6 +4333,7 @@ const renderTravelPeekDetails = (details = []) => {
       `
     )
     .join("");
+  refreshLucide(travelPeekDetails);
 };
 
 const updateTravelPeekSendState = () => {
@@ -4518,9 +4559,10 @@ const initTravelTrips = () => {
     const collapsed = nextTripPanel.classList.toggle("is-collapsed");
     nextTripCollapse.setAttribute("aria-expanded", String(!collapsed));
     nextTripCollapse.setAttribute("aria-label", collapsed ? "Expand trip details" : "Collapse trip details");
-    const icon = nextTripCollapse.querySelector("[class^='iconoir-']");
+    const icon = nextTripCollapse.querySelector("[data-lucide]");
     if (icon) {
-      icon.className = collapsed ? "iconoir-expand" : "iconoir-collapse";
+      icon.setAttribute("data-lucide", collapsed ? "chevrons-down" : "chevrons-up");
+      refreshLucide(nextTripCollapse);
     }
   });
 };
@@ -4690,3 +4732,4 @@ updateAgentSessionSendState();
 initListItemNavigation();
 updateItemPeekSendState();
 initRouter();
+refreshLucide();

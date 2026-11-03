@@ -1,23 +1,23 @@
 :root {
   color-scheme: light;
-  --palette-1: #7400b8;
-  --palette-2: #6930c3;
-  --palette-3: #5e60ce;
-  --palette-4: #5390d9;
-  --palette-5: #4ea8de;
-  --palette-6: #48bfe3;
-  --palette-7: #56cfe1;
-  --palette-8: #64dfdf;
-  --palette-9: #72efdd;
-  --palette-10: #80ffdb;
-  --bg: rgb(252, 252, 252);
+  /* Synced from nexus-people-os-design-system tokens/tokens.css */
+  --palette-1: #357de8;
+  --palette-2: #2898bd;
+  --palette-3: #22a06b;
+  --palette-4: #6a9a23;
+  --palette-5: #b38600;
+  --palette-6: #e06c00;
+  --palette-7: #e2483d;
+  --palette-8: #cd519d;
+  --palette-9: #af59e1;
+  --bg: rgb(247, 248, 249);
   --surface: #ffffff;
   --surface-muted: #f1f3f4;
   --text: #202124;
-  --muted: #6b7280;
-  --line: #e5e7eb;
-  --accent: var(--palette-3);
-  --accent-soft: #e8faf8;
+  --muted: #8c8f97;
+  --line: #dddee1;
+  --accent: #357de8;
+  --accent-soft: #cfe1fd;
   --sand: #f3f4f6;
   --white: #ffffff;
   --shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
@@ -26,6 +26,12 @@
 
 * {
   box-sizing: border-box;
+}
+
+svg.lucide {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
 }
 
 body {
@@ -140,7 +146,7 @@ button:disabled {
   justify-content: center;
 }
 
-.sidebar-collapsed .sidebar-toggle .iconoir-nav-arrow-left {
+.sidebar-collapsed .sidebar-toggle svg.lucide {
   transform: rotate(180deg);
 }
 
@@ -156,7 +162,7 @@ button:disabled {
   color: var(--muted);
 }
 
-.sidebar-toggle [class^="iconoir-"] {
+.sidebar-toggle svg.lucide {
   font-size: 18px;
   transition: transform 160ms ease;
 }
@@ -203,7 +209,7 @@ a.rail-button {
   color: var(--text);
 }
 
-.rail-button [class^="iconoir-"] {
+.rail-button svg.lucide {
   font-size: 20px;
 }
 
@@ -300,10 +306,11 @@ a.rail-button {
   padding: 0;
   background: transparent;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .brand-mark--logo img {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .brand-wordmark {
@@ -419,7 +426,7 @@ a.rail-button {
   color: var(--text);
 }
 
-.page-icon [class^="iconoir-"] {
+.page-icon svg.lucide {
   font-size: 16px;
   line-height: 1;
 }
@@ -445,7 +452,7 @@ a.rail-button {
   border-radius: 8px;
 }
 
-.agent-icon [class^="iconoir-"] {
+.agent-icon svg.lucide {
   font-size: 16px;
   line-height: 1;
 }
@@ -493,7 +500,7 @@ a.rail-button {
   border-radius: 10px;
 }
 
-.agent-icon-lg [class^="iconoir-"] {
+.agent-icon-lg svg.lucide {
   font-size: 18px;
 }
 
@@ -809,9 +816,9 @@ textarea::placeholder {
     opacity 160ms ease;
 }
 
-.icon-button [class^="iconoir-"] {
-  font-size: 20px;
-  line-height: 1;
+.icon-button svg.lucide {
+  width: 20px;
+  height: 20px;
 }
 
 .secondary-icon {
@@ -1077,7 +1084,7 @@ textarea::placeholder {
   backdrop-filter: blur(14px);
 }
 
-.carousel-control [class^="iconoir-"] {
+.carousel-control svg.lucide {
   font-size: 17px;
   line-height: 1;
 }
@@ -1526,7 +1533,7 @@ textarea::placeholder {
   border-radius: 10px;
 }
 
-.task-agent-icon [class^="iconoir-"] {
+.task-agent-icon svg.lucide {
   font-size: 18px;
 }
 
@@ -1573,7 +1580,7 @@ textarea::placeholder {
   color: inherit;
 }
 
-.status-pill-icon [class^="iconoir-"] {
+.status-pill-icon svg.lucide {
   font-size: 14px;
   color: currentColor;
   line-height: 1;
@@ -1747,7 +1754,7 @@ textarea::placeholder {
 
 .feedback-gradient-one {
   background:
-    radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--palette-10) 70%, transparent), transparent 40%),
+    radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--palette-9) 70%, transparent), transparent 40%),
     linear-gradient(
       145deg,
       var(--surface) 0%,
@@ -2548,8 +2555,8 @@ textarea::placeholder {
   gap: 8px;
 }
 
-.feedback-voice-button [class^="iconoir-"],
-.feedback-voice-start [class^="iconoir-"] {
+.feedback-voice-button svg.lucide,
+.feedback-voice-start svg.lucide {
   font-size: 16px;
   line-height: 1;
 }
@@ -2589,7 +2596,7 @@ textarea::placeholder {
   cursor: pointer;
 }
 
-.next-trip-collapse [class^="iconoir-"] {
+.next-trip-collapse svg.lucide {
   font-size: 18px;
   line-height: 1;
 }
@@ -2811,7 +2818,7 @@ textarea::placeholder {
   cursor: pointer;
 }
 
-.travel-chat-back [class^="iconoir-"] {
+.travel-chat-back svg.lucide {
   font-size: 18px;
 }
 
@@ -2945,7 +2952,7 @@ textarea::placeholder {
   border-top: 2px dotted rgba(248, 250, 252, 0.45);
 }
 
-.flight-ticket-path [class^="iconoir-"] {
+.flight-ticket-path svg.lucide {
   font-size: 16px;
   transform: rotate(90deg);
 }
@@ -3070,7 +3077,7 @@ textarea::placeholder {
   background: color-mix(in srgb, var(--palette-4) 10%, white);
 }
 
-.chat-source-avatar.chat-source-icon [class^="iconoir-"] {
+.chat-source-avatar.chat-source-icon svg.lucide {
   font-size: 13px;
   line-height: 1;
 }
@@ -3092,7 +3099,7 @@ textarea::placeholder {
   color: var(--text);
 }
 
-.chat-agent-action [class^="iconoir-"] {
+.chat-agent-action svg.lucide {
   font-size: 16px;
   line-height: 1;
 }
@@ -3366,7 +3373,7 @@ textarea::placeholder {
   color: var(--palette-4);
 }
 
-.trip-detail-icon [class^="iconoir-"] {
+.trip-detail-icon svg.lucide {
   font-size: 18px;
   line-height: 1;
 }
@@ -3417,7 +3424,7 @@ textarea::placeholder {
   background-image:
     radial-gradient(circle at 22% 18%, rgba(114, 239, 221, 0.28), transparent 36%),
     url("https://images.unsplash.com/photo-1666362755385-1856fca1a330?auto=format&fit=crop&w=1200&q=80"),
-    linear-gradient(135deg, var(--palette-4) 0%, var(--palette-5) 45%, var(--palette-10) 100%);
+    linear-gradient(135deg, var(--palette-4) 0%, var(--palette-5) 45%, var(--palette-9) 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -3616,7 +3623,7 @@ body.document-canvas-open {
   backdrop-filter: blur(14px);
 }
 
-.peek-close [class^="iconoir-"] {
+.peek-close svg.lucide {
   font-size: 18px;
   line-height: 1;
 }
